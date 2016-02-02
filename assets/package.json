@@ -1,0 +1,25 @@
+{
+  "name": "angular_template",
+  "version": "0.0.0",
+  "description": "This project has to serve as angular template.",
+  "main": "src/app.ts",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "gulp test"
+  },
+  "author": "André Heller; AnHeller6@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "angular": "^1.4.9",
+    "angular-route": "^1.4.9",
+    "gulp": "^3.9.0",
+    "gulp-angular-templatecache": "^1.8.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-connect": "^2.3.1",
+    "gulp-replace": "^0.5.4",
+    "gulp-typescript": "^2.10.0",
+    "merge-stream": "^1.0.0"
+  }
+}
