@@ -14,7 +14,7 @@ module application.controllers {
 	{
 	//== CLASS ATTRIBUTES ==========================================================	
 		
-		public static $inject = ['$scope','$rootScope','$location','$log','LoginService']; 
+		public static $inject = ['$scope','$rootScope','$location','$log','LoginService','UIService']; 
 		
 	//== INSTANCE ATTRIBUTES =======================================================
 	//== CLASS GETTERS AND SETTERS =================================================
@@ -28,7 +28,8 @@ module application.controllers {
             private $rootScope: any,
             private $location: ng.ILocationService,
             private $log: ng.ILogService,
-            private LoginService: services.LoginService
+            private LoginService: services.LoginService,
+            private UIService: services.UIService
 		){
 			this.$scope.vm = this;
             
@@ -47,16 +48,25 @@ module application.controllers {
          * Log In user and redirect to homepage
          */
         private login() {
+            this.UIService.showLoader();
             this.LoginService.login()
             .then(
                 () => {
-                    debugger;
                     this.$location.path(Routes.HOME);
                     this.$scope.$apply();
+                    this.UIService.showAlert(
+                        StringF.format(
+							Strings.SUCCESS_USER_LOGGED_IN, 
+							this.$rootScope.user.name
+                        ),
+                        services.AlertService.OK
+                    );
+                    this.UIService.hideLoader();
                 },
                 (error) => {
                     //TODO
-                    console.error(error);
+                    this.UIService.showAlert(error);
+                    this.UIService.hideLoader();
                 }
              );
         }

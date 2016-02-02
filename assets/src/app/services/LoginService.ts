@@ -41,17 +41,8 @@ module application.services {
          */
         public login(immediate?: boolean): Promises.Promise {
             return this.checkAuth(immediate)
-            .then(() => {return this.loadUser()})
-            .then((user) => {
-                this.$rootScope.user = {
-                    'logged': true,
-                    'name': user.result.name.givenName,
-                    'lastName': user.result.name.familyName,
-                    'image': user.result.image.url,
-                    'googleId': user.result.id,
-                    'time': new Date()
-                };
-            });  
+            .then(() => {return this.loadUser();})
+            .then((user) => {this.saveUser(user);});  
         }
         
         
@@ -155,25 +146,36 @@ module application.services {
             
             gapi.client.load('plus', 'v1')
             .then(
-                () => {
-                    return gapi.client.plus.people.get({
-                        'userId': 'me'
-                    });
+                (response) => {
+                    //Google API show 404 OK, so even error go trough
+                    if(response && response.error){ 
+                        this.$log.error('LoginService: Rejecting User data promise.');
+                        this.$log.debug(response.error);
+                        this.logout();
+                        d.reject(Strings.ERROR_PLUS_NOT_FOUND);
+                    }
+                    else {                    
+                        return gapi.client.plus.people.get({
+                            'userId': 'me'
+                        });
+                    }
                 },
                 (err) => {
                     this.$log.error('LoginService: Rejecting User data promise.');
                     this.$log.debug(err);
+                    this.logout();
                     d.reject(Strings.ERROR_PLUS_NOT_FOUND);
                 }
             )
             .then(
-                (resp) => {
+                (response) => {
                     this.$log.debug('LoginService: Fullfilling User data promise.');
-                    d.fulfill(resp)
+                    d.fulfill(response)
                 },
                 (err) => {
                     this.$log.error('LoginService: Rejecting User data promise.');
                     this.$log.debug(err);
+                    this.logout();
                     d.reject(Strings.ERROR_USER_DATA);
                 }
             );
@@ -182,6 +184,21 @@ module application.services {
             return d.promise();
         }
         
+        
+        /**
+         * Save User info into rootscope
+         */
+        private saveUser(user): void {
+            this.$rootScope.user = {
+                'logged': true,
+                'name': user.result.name.givenName,
+                'lastName': user.result.name.familyName,
+                'image': user.result.image.url,
+                'googleId': user.result.id,
+                'time': new Date()
+            };
+        }
+         
         
         /**
          * Save user token and its expire time into localStorage
