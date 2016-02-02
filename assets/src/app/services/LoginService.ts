@@ -35,6 +35,9 @@ module application.services {
         
         /**
          * Log In user.
+         * 
+         * immediate set popup login if false or background login if true.
+         * False is default.
          */
         public login(immediate?: boolean): Promises.Promise {
             return this.checkAuth(immediate)
@@ -112,25 +115,30 @@ module application.services {
                     scope: this.$rootScope.google.scopes,
                     immediate: auto
                 };
-            
-            gapi.auth.authorize(authData, (response: GoogleApiOAuth2TokenObject) => {
-                if(response.error) {
-					this.$log.error('LoginService: Rejecting authorize.'); 
-                    this.$log.debug('LoginService: ' + response.error);
-					
-                    if(response.error === 'immediate_failed'){
-                        d.reject(Strings.ERROR_IMMEDIATE_FAILED);   
+            if(gapi.auth){
+                gapi.auth.authorize(authData, (response: GoogleApiOAuth2TokenObject) => {
+                    if(response.error) {
+                        this.$log.error('LoginService: Rejecting authorize.'); 
+                        this.$log.debug('LoginService: ' + response.error);
+                        
+                        if(response.error === 'immediate_failed'){
+                            d.reject(Strings.ERROR_IMMEDIATE_FAILED);   
+                        }
+                        else {
+                            d.reject(Strings.ERROR_NOT_AUTHORIZED + response.error);    
+                        }
                     }
                     else {
-                        d.reject(Strings.ERROR_NOT_AUTHORIZED + response.error);    
+                        this.$log.debug('LoginService: Fullfilling authorize.');
+                        this.saveToken(response);
+                        d.fulfill();
                     }
-				}
-				else {
-                    this.$log.debug('LoginService: Fullfilling authorize.');
-					this.saveToken(response);
-					d.fulfill();
-				}
-			});
+                });
+            }
+            else {
+                this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.\nSetting timeout.');
+                d.reject(Strings.ERROR_TECH_PLEASE_REPEAT);                    
+            }
                 
             this.$log.debug('LoginService: Returning authorize promise.');    
             return d.promise();

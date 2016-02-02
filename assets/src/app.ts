@@ -25,11 +25,12 @@ module application {
 			}) 
 			.otherwise({redirectTo: '/'});
 	})
-    .run(['$rootScope','$location','$log','LoginService', function(
+    .run(['$rootScope','$location','$log','LoginService','UIService', function(
             $rootScope: any, 
             $location: ng.ILocationService, 
             $log:ng.ILogService, 
-            LoginService: services.LoginService) {
+            LoginService: services.LoginService,
+            UIService: services.UIService) {
 		
         //Set default initial data
 		setInitialData($rootScope);
@@ -42,7 +43,7 @@ module application {
                 $rootScope.currentSection = next.$$route.originalPath;
                 
                 //Check if use is logged in and if not redirect to login page
-                checkUserLoginState(LoginService,$log,$location,$rootScope);
+                checkUserLoginState(LoginService,UIService,$log,$location,$rootScope);
                 
                 $log.debug(
                     '=======================================\n' +
@@ -60,7 +61,11 @@ module application {
     /**
      * Directive & services & controllers
      */
-    app.service('LoginService', services.LoginService);
+    app.service('LoginService', services.LoginService)
+       .service('UIService', services.UIService)
+       .service('LoaderService', services.LoaderService);
+    
+    app.directive('loader', directives.Loader)
     
     
     /**
@@ -86,6 +91,7 @@ module application {
      * If is logged out or has invalid or expired token, redirect to LOGIN page.
      */
     var checkUserLoginState = function(LoginService: services.LoginService,
+                                       UIService: services.UIService,
                                        $log: ng.ILogService,
                                        $location: ng.ILocationService,
                                        $rootScope: any){

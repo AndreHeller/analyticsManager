@@ -10,3 +10,7 @@
 ///<reference path="./app/controllers/LoginCtrl.ts" />
 
 ///<reference path="./app/services/LoginService.ts" />
+///<reference path="./app/services/UIService.ts" />
+///<reference path="./app/services/LoaderService.ts" />
+
+///<reference path="./app/directives/loader/Loader.ts" />

@@ -5,6 +5,7 @@ module application {
         public static ERROR_IMMEDIATE_FAILED: string = 'Platnost tvého přihlášení zřejmě vypršela. Přihlaš se prosím znovu.\nPokud potíže přetrvávají obrať se na technickou podporu.';
         public static ERROR_PLUS_NOT_FOUND: string = 'Nepodařilo se stáhnout zdroje potřebné pro tvoji identifikaci.';
 		public static ERROR_USER_DATA: string = 'Nepodařilo se stáhnout uživatelská data.';
+        public static ERROR_TECH_PLEASE_REPEAT: string = 'Došlo k technickým problémům. Zkus aplikaci načíst znovu.';
         
         
         
