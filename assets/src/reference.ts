@@ -2,7 +2,7 @@
 ///<reference path="./typings/gapi2.d.ts" />
 
 ///<reference path="./util/Promises/Promise.ts" />
-///<reference path="./util/StringM.ts" />
+///<reference path="./util/StringF.ts" />
 
 ///<reference path="./app/Routes.ts" />
 ///<reference path="./app/Strings.ts" />

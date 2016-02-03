@@ -50,7 +50,7 @@ module application.services {
 		/**
 		 * Add and show new alert.
 		 */ 
-		public addAlert = function(type: string, msg: string): Alert {
+		public addAlert(type: string, msg: string): Alert {
 			var alert: Alert = {			
 				type: type,
 				msg: msg,
@@ -70,7 +70,7 @@ module application.services {
 		/**
 		 * Delete and hide an alert.
 		 */
-		public closeAlert = function(alert: Alert) {
+		public closeAlert(alert: Alert) {
 			this.$rootScope.alerts.splice(this.$rootScope.alerts.indexOf(alert), 1); 
 		};
 		
