@@ -63,9 +63,11 @@ module application {
      */
     app.service('LoginService', services.LoginService)
        .service('UIService', services.UIService)
-       .service('LoaderService', services.LoaderService);
+       .service('LoaderService', services.LoaderService)
+       .service('AlertService', services.AlertService);
     
     app.directive('loader', directives.Loader)
+       .directive('alert', directives.Alert);
     
     
     /**

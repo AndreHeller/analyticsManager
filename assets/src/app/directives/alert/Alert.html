@@ -1,0 +1,8 @@
+<div class="alert" ng-class="['alert-' + type]">
+	<button ng-click="close()" class="close" aria-label="close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	<span class="glyphicon" ng-class="['glyphicon-' + icon]" aria-hidden="true"></span>
+		<span class="sr-only">{{altType}}</span>
+	<span ng-transclude></span>
+</div> 

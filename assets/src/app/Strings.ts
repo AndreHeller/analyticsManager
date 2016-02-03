@@ -9,6 +9,9 @@ module application {
         
         
         
+        public static SUCCESS_USER_LOGGED_IN: string = 'Nazdar %s! Přihlášení proběhlo v pohodě.';
+        
+        
 		
         
 		public static ERROR_ANALYTICS_NOT_FOUND: string = 'Nepodařilo se stáhnout knihovnu Google Analytics'; 
@@ -25,7 +28,5 @@ module application {
 		
 		
 		
-		
-		public static SUCCESS_USER_LOGGED_IN: string = 'Nazdar %s! Přihlášení proběhlo v pohodě.';
 	}
 }

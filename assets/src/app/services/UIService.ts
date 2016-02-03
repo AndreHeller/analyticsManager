@@ -16,7 +16,7 @@ module application.services {
 	//== CLASS ATTRIBUTES ==========================================================
 			
 		//Angular DI 
-		public static $inject = ['$log', '$timeout', /*'alertService',*/ 'LoaderService'];
+		public static $inject = ['$log', '$timeout', 'AlertService', 'LoaderService'];
 		
 	//== INSTANCE ATTRIBUTES =======================================================		
 		
@@ -34,7 +34,7 @@ module application.services {
 		constructor(  
 			private $log: ng.ILogService,
 			private $timeout: ng.ITimeoutService,
-			//private alertSvc: services.AlertService,
+			private alertSvc: services.AlertService,
 			private loaderSvc: services.LoaderService
 		) {
 			
@@ -66,9 +66,9 @@ module application.services {
 				this.loadingTimeoutPromise = this.$timeout(
 					() => {
 						this.hideLoader();
-						//this.showAlert(gamanager.Strings.ERROR_REQUEST_TIMEOUT);
+						this.showAlert(Strings.ERROR_REQUEST_TIMEOUT);
 					},
-					30000 //Timeout
+					5000 //Timeout
 				);
 				
 				this.loaderSvc.showLoader();
@@ -90,7 +90,7 @@ module application.services {
 		 * The other optional parameter is close timeout in milliseconds. 
 		 * Without them the alert never hide itself.
 		 */
-		/*public showAlert(msg: string, type?: string, timeout?: number): void {
+		public showAlert(msg: string, type?: string, timeout?: number): void {
 			type = type || 'danger';
 			
 			this.$log.debug('AlertManager: Handling ' + type);
@@ -105,7 +105,7 @@ module application.services {
 					timeout
 				);
 			}
-		}*/
+		}
 		
 	//== PRIVATE AND AUXILIARY CLASS METHODS =======================================
 	//== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================	
