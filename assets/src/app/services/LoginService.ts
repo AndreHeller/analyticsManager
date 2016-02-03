@@ -60,11 +60,56 @@ module application.services {
          * If user has saved token but its expired, refresh it.
          */
         public refreshToken(): Promises.Promise{
-            return this.checkAuth(true)
+            var d = new Promises.Deferred();
+            
+            this.checkAuth(true)
+            .then(() => {return this.loadUser();})
+            .then((user) => {this.saveUser(user);}) 
             .then(
-                () => {/*do nothing here*/},
-                () => {this.logout();}
+                () => {
+                    
+                    d.fulfill();
+                },
+                () => {
+                    this.logout();
+                    d.reject();
+                }
             );
+            
+            return d.promise();
+        }
+        
+        
+        /**
+         * If user has saved token but its expired, refresh it.
+         */
+        public refreshUserInfo(): Promises.Promise{
+            var d = new Promises.Deferred();
+            
+            gapi.auth.init(
+                () => {
+                    var token: GoogleApiOAuth2TokenObject = {
+                        access_token: this.$window.localStorage.getItem('gT'),
+                        expires_in: this.$window.localStorage.getItem('gTein'),
+                        state: ''
+                    }
+                    gapi.auth.setToken(token);
+                }
+            );
+            
+            this.loadUser()
+            .then((user) => {this.saveUser(user);}) 
+            .then(
+                () => {
+                    d.fulfill();
+                },
+                () => {                    
+                    this.logout();
+                    d.reject();
+                }
+            );
+            
+            return d.promise();
         }
         
         
@@ -127,7 +172,8 @@ module application.services {
                 });
             }
             else {
-                this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.\nSetting timeout.');
+                this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.');
+                this.$log.error('LoginService: Rejecting authorize.');
                 d.reject(Strings.ERROR_TECH_PLEASE_REPEAT);                    
             }
                 
@@ -204,14 +250,14 @@ module application.services {
          * Save user token and its expire time into localStorage
          */
         private saveToken(token: GoogleApiOAuth2TokenObject): void {
-            
             var date: Date = new Date(),
                 expire: number = parseInt(token.expires_in);
             
             date.setSeconds(expire);
             
             this.$window.localStorage.setItem('gT',token.access_token);
-            this.$window.localStorage.setItem('gTe', date.getTime() + '');
+            this.$window.localStorage.setItem('gTeat', date.getTime() + '');
+            this.$window.localStorage.setItem('gTein', token.expires_in + '');
 		}
 		
         /**
@@ -219,7 +265,8 @@ module application.services {
          */
 		private clearToken():void {
 			this.$window.localStorage.removeItem('gT');
-			this.$window.localStorage.removeItem('gTe');	
+			this.$window.localStorage.removeItem('gTeat');
+            this.$window.localStorage.removeItem('gTein');	
 		}
         
         
@@ -231,7 +278,7 @@ module application.services {
         private isTokenExpired(): boolean{
             if(this.$window.localStorage.getItem('gT')){
 				var now: Date = new Date(),
-					expire: Date = new Date(parseInt(localStorage.getItem('gTe')));
+					expire: Date = new Date(parseInt(localStorage.getItem('gTeat')));
 					
 				if(now < expire){
 					return false;	

@@ -53,7 +53,6 @@ module application.controllers {
             .then(
                 () => {
                     this.$location.path(Routes.HOME);
-                    this.$scope.$apply();
                     this.UIService.showAlert(
                         StringF.format(
 							Strings.SUCCESS_USER_LOGGED_IN, 
@@ -61,6 +60,7 @@ module application.controllers {
                         ),
                         services.AlertService.OK
                     );
+                    this.$rootScope.$apply();
                     this.UIService.hideLoader();
                 },
                 (error) => {

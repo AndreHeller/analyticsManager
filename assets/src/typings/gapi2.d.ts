@@ -14,7 +14,7 @@ interface GoogleApiOAuth2TokenObject {
     /**
      * Details about the error. Only present in error responses
      */
-    error: string;
+    error?: string;
     /**
      * The duration, in seconds, the token is valid for. Only present in successful responses
      */
@@ -22,7 +22,7 @@ interface GoogleApiOAuth2TokenObject {
     /**
      * The time the token is valid for. Only present in successful responses
      */
-    expires_at: string;
+    expires_at?: string;
     /**
      * The Google API scopes related to this token
      */

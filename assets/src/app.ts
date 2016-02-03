@@ -35,15 +35,15 @@ module application {
         //Set default initial data
 		setInitialData($rootScope);
         
+        //Check if use is logged in and if not redirect to login page
+        checkUserLoginState(LoginService,UIService,$log,$location,$rootScope);
+        
         //Register listener to watch route changes
 		$rootScope.$on('$routeChangeStart', (event, next, current) => {
 			
             if(next.$$route){
                 //Set current section
                 $rootScope.currentSection = next.$$route.originalPath;
-                
-                //Check if use is logged in and if not redirect to login page
-                checkUserLoginState(LoginService,UIService,$log,$location,$rootScope);
                 
                 $log.debug(
                     '=======================================\n' +
@@ -98,11 +98,8 @@ module application {
                                        $location: ng.ILocationService,
                                        $rootScope: any){
         
-        if(LoginService.getUserState() < 1){
-                
-            $log.debug('APP: User not logged.');
-            
-            if(LoginService.getUserState() == -1){
+        switch(LoginService.getUserState()){
+            case -1 :
                 
                 $log.debug('APP: Found expired or invalid token.');
                 
@@ -110,6 +107,12 @@ module application {
                 .then(
                     () => {
                         $log.debug('APP: Token refreshed.');
+                        UIService.showAlert(StringF.format(
+							application.Strings.SUCCESS_USER_LOGGED_IN_IMMEDIATE, 
+							$rootScope.user.name
+                        ),
+                        'success');
+                        $rootScope.$apply();
                     },
                     (err) => {
                         $log.error('APP: Token could not refresh.');
@@ -119,11 +122,38 @@ module application {
                         $rootScope.$apply();
                     }
                 );
-            }
-            else {
+                break;
+                
+            case 0 :
+                
+                $log.debug('APP: User not logged.');
+                
                 $location.path( Routes.LOGIN );
-            } 
+                break;
+                
+            case 1 :
+                
+                $log.debug('APP: User logged');
+                if(!$rootScope.user.logged){
+                    LoginService.refreshUserInfo()
+                    .then(
+                        () => {
+                            $log.debug('APP: User info refreshed.');
+                            $rootScope.$apply();
+                        },
+                        (err) => {
+                            $log.error('APP: User info not refresh.');
+                            $log.debug(err);
+                            
+                            UIService.showAlert(Strings.ERROR_USER_DATA)
+                            
+                            $location.path( Routes.LOGIN );
+                            $rootScope.$apply();
+                        }
+                    );   
+                }
+                
+                break;
         }
-        
     }
 }
