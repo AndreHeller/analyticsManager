@@ -193,6 +193,14 @@ module application.services {
         public getUserInfo(): entities.User{
             return this.LoginService.getUserInfo();
         }
+        
+        
+        /**
+         * Created default User. Still Logged out.
+         */
+        public initUser(): void {
+            this.LoginService.initUser();
+        }
         		
     //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
 	//== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================

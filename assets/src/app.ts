@@ -20,7 +20,7 @@ module application {
     .run(['$rootScope','$log','AuthService', function($rootScope: any, $log:ng.ILogService, AuthService: services.AuthService){
 		
         //Set default initial data
-		setInitialData($rootScope);
+		setInitialData($rootScope, AuthService);
         
         //Register listener to watch route changes
 		$rootScope.$on('$routeChangeStart', (event, next, current) => {
@@ -85,21 +85,14 @@ module application {
     /**
      * Set basic initial data for application
      */
-    var setInitialData = function($rootScope: any): void {
+    var setInitialData = function($rootScope: any, AuthService: services.AuthService): void {
         // Initiate system variables
-		$rootScope.user = {'logged': false};
+		AuthService.initUser();
         
         // Initiate system variables
 		$rootScope.sessionStarted = false; 
 		
 		// Sets the enviromanet (debug, production)
 		$rootScope.enviroment = 'debug';
-        
-        $rootScope.google = {};
-        $rootScope.google.client_id = '265759548418-ibp90bhfkiham5hij8ka7nf8bvvqd6j0.apps.googleusercontent.com';
-        $rootScope.google.scopes = [
-            'profile',
-            'https://www.googleapis.com/auth/plus.me'
-        ];
     }
 }

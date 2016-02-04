@@ -18,6 +18,14 @@ module application.services {
 		public static $inject = ['$rootScope', '$log','$window','$location'];
 		
 	//== INSTANCE ATTRIBUTES =======================================================
+    
+        public client_id: string = '265759548418-ibp90bhfkiham5hij8ka7nf8bvvqd6j0.apps.googleusercontent.com';
+        
+        public scopes: string[] = [
+            'profile',
+            'https://www.googleapis.com/auth/plus.me'
+        ];
+        
 	//== CLASS GETTERS AND SETTERS =================================================
 	//== OTHER NON-PRIVATE CLASS METHODS =========================================== 
 	
@@ -57,47 +65,52 @@ module application.services {
          */
         public logout(){
             this.clearToken();
-            this.$rootScope.user = {'logged': false};
+            this.clearUser();
+
             
             this.$location.path(Routes.LOGIN);
         }
         
         
         /**
-         * If user has saved token but its expired, refresh it.
+         * If user has saved token but its expired, this will refresh it.
+         * Initialize auth api with saved Token and retrive user info from google+ library. 
+         * Then save it.
          */
         public refreshUserInfo(): Promises.Promise{
             var d = new Promises.Deferred();
             
-            gapi.auth.init(
-                () => {
-                    var token: GoogleApiOAuth2TokenObject = {
-                        access_token: this.$window.localStorage.getItem('gT'),
-                        expires_in: this.$window.localStorage.getItem('gTein'),
-                        state: ''
+            if(gapi.auth){
+                gapi.auth.init(
+                    () => {
+                        gapi.auth.setToken(this.getToken());
                     }
-                    gapi.auth.setToken(token);
-                }
-            );
-            
-            this.loadUser()
-            .then((user) => {this.saveUser(user);}) 
-            .then(
-                () => {
-                    d.fulfill();
-                },
-                () => {                    
-                    this.logout();
-                    d.reject();
-                }
-            );
+                );
+                
+                this.loadUser()
+                .then((user) => {this.saveUser(user);}) 
+                .then(
+                    () => {
+                        d.fulfill();
+                    },
+                    () => {                    
+                        this.logout();
+                        d.reject();
+                    }
+                );    
+            }
+            else {
+                this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.');
+                this.$log.error('LoginService: Rejecting user data refresh.');
+                d.reject();    
+            }
             
             return d.promise();
         }
         
         
         /**
-         * Return actual user login state.
+         * Return actual user state.
          * 
          * -1 - expired or invalid token
          * 0 - unlogged user
@@ -122,26 +135,40 @@ module application.services {
         public getUserInfo(): entities.User{
             return this.$rootScope.user;
         }
+        
+        
+        /**
+         * Initialize default user values. Still set as logged out.
+         */
+        public initUser(): void { 
+            this.saveUser('default');
+        }
+         
         		
     //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
 	//== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================
         
         /**
          * Create basic API call for token refreshing and authorizing application.
+         * 
+         * @param immediate set the way how login will. False open consent window. 
+         * True goes on background.
          */
-        private checkAuth(auto?: boolean): Promises.Promise {
+        private checkAuth(immediate?: boolean): Promises.Promise {
             
-            if(!auto) auto = false;
-            else auto = true;
+            //Set default immediate as false.
+            if(!immediate) immediate = false;
+            else immediate = true;
             
-            this.$log.debug('LoginService: Starting authorize with immediate as ' + auto + '.');
+            this.$log.debug('LoginService: Starting authorize with immediate as ' + immediate + '.');
             
             var d = new Promises.Deferred,
                 authData = {
-                    client_id: this.$rootScope.google.client_id,
-                    scope: this.$rootScope.google.scopes,
-                    immediate: auto
+                    client_id: this.client_id,
+                    scope: this.scopes,
+                    immediate: immediate
                 };
+                
             if(gapi.auth){
                 gapi.auth.authorize(authData, (response: GoogleApiOAuth2TokenObject) => {
                     if(response.error) {
@@ -226,18 +253,41 @@ module application.services {
          * Save User info into rootscope
          */
         private saveUser(user): void {
-            var savedUser: entities.User = {
-                'logged': true,
-                'name': user.result.name.givenName,
-                'lastName': user.result.name.familyName,
-                'image': user.result.image.url,
-                'googleId': user.result.id,
-                'time': new Date()
+            
+            var savedUser: entities.User;
+            
+            if(user === 'default'){
+                savedUser = {
+                    'logged': false,
+                    'name': 'Default',
+                    'lastName': 'User',
+                    'image': '',
+                    'googleId': '0000',
+                    'time': new Date()
+                }
+            }
+            else {
+                savedUser = {
+                    'logged': true,
+                    'name': user.result.name.givenName,
+                    'lastName': user.result.name.familyName,
+                    'image': user.result.image.url,
+                    'googleId': user.result.id,
+                    'time': new Date()
+                }    
             }
             
             this.$rootScope.user = savedUser;
         }
-         
+        
+        
+        /**
+         * Delete all user info and set default instead of it.
+         */
+        private clearUser(): void {
+            this.initUser();
+        }
+        
         
         /**
          * Save user token and its expire time into localStorage
@@ -248,11 +298,30 @@ module application.services {
             
             date.setSeconds(expire);
             
-            this.$window.localStorage.setItem('gT',token.access_token);
+            this.$window.localStorage.setItem('gT', token.access_token);
             this.$window.localStorage.setItem('gTeat', date.getTime() + '');
             this.$window.localStorage.setItem('gTein', token.expires_in + '');
 		}
 		
+        
+        /**
+         * Returns user token object
+         */
+        private getToken(): GoogleApiOAuth2TokenObject {
+			var token: GoogleApiOAuth2TokenObject = null;
+            
+            if(this.$window.localStorage.getItem('gT')){
+                token = {
+                    access_token: this.$window.localStorage.getItem('gT'),
+                    expires_in: this.$window.localStorage.getItem('gTein'),
+                    state: ''
+                };
+            } 
+                
+            return token;	
+		}
+        
+        
         /**
          * Clear user data in localStorrage
          */
