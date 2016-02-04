@@ -1,9 +1,10 @@
 ///<reference path='../../reference.ts' />
 module application.services {
     /**
-	 * This class represents main service, which is responsible for user.
+	 * This class represents main service, which is responsible for user actions.
      * 
      * It can authorize or logout user, return its login state od return its info.
+     * Also shows alerts and can show loaders in specific cases.
 	 *
 	 * @author  André Heller; anheller6gmail.com
 	 * @version 1.00 — 02/2016
@@ -158,7 +159,7 @@ module application.services {
         
         
         /**
-         * Log out user and delete all credentials.
+         * Log out user, delete all credentials and redirect to Login page.
          * 
          * @param alert Indicates if should be shown alert with success message. Default is false.
          */
@@ -189,8 +190,8 @@ module application.services {
         /**
          * Return User object
          */
-        public getUserInfo(){
-            return this.$rootScope.user;
+        public getUserInfo(): entities.User{
+            return this.LoginService.getUserInfo();
         }
         		
     //== PRIVATE AND AUXILIARY CLASS METHODS =======================================

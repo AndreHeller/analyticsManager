@@ -3,10 +3,13 @@ module application.services {
 	/**
 	 * This class represents  service, which is responsible for user authentification.
      * 
-     * It contact google api and authoriuzes Google Accounts, retrieve basic user info and manage user tokens.
+     * It contact google api and authoriuzes Google Accounts, retrieve basic user info and
+     * manage user tokens.
+     * 
+     * !! This service should not be used directly, but trough AuthService.
 	 *
 	 * @author  André Heller; anheller6gmail.com
-	 * @version 1.00 — 07/2015
+	 * @version 1.00 — 02/2016
 	 */
 	export class LoginService {
 	//== CLASS ATTRIBUTES ==========================================================
@@ -35,9 +38,11 @@ module application.services {
 	//== OTHER NON-PRIVATE INSTANCE METHODS ========================================
         
         /**
-         * Log In user.
+         * Log In user. Authorize app with Google API, save token. 
+         * Then download Google+ library and retrieve user info, which save.
          * 
-         * immediate set popup login if false or background login if true.
+         * @param immediate set the way how login will. False open consent window. 
+         * True goes on background.
          * False is default.
          */
         public login(immediate?: boolean): Promises.Promise {
@@ -48,7 +53,7 @@ module application.services {
         
         
         /**
-         * Log out user
+         * Log out user, delete all credentials and redirect to Login page.
          */
         public logout(){
             this.clearToken();
@@ -108,6 +113,14 @@ module application.services {
             else {
                 return 0 //No token or Unlogged user
             }
+        }
+        
+        
+        /**
+         * Return User object
+         */
+        public getUserInfo(): entities.User{
+            return this.$rootScope.user;
         }
         		
     //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
@@ -213,7 +226,7 @@ module application.services {
          * Save User info into rootscope
          */
         private saveUser(user): void {
-            var savedUser = {
+            var savedUser: entities.User = {
                 'logged': true,
                 'name': user.result.name.givenName,
                 'lastName': user.result.name.familyName,

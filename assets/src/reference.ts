@@ -7,6 +7,8 @@
 ///<reference path="./app/Routes.ts" />
 ///<reference path="./app/Strings.ts" />
 
+///<reference path="./app/entities/User.ts" />
+
 ///<reference path="./app/controllers/HomeCtrl.ts" />
 ///<reference path="./app/controllers/LoginCtrl.ts" />
 
