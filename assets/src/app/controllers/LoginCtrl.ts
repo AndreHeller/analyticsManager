@@ -14,7 +14,7 @@ module application.controllers {
 	{
 	//== CLASS ATTRIBUTES ==========================================================	
 		
-		public static $inject = ['$scope','$rootScope','$location','$log','LoginService','UIService']; 
+		public static $inject = ['$scope','$location','AuthService']; 
 		
 	//== INSTANCE ATTRIBUTES =======================================================
 	//== CLASS GETTERS AND SETTERS =================================================
@@ -25,16 +25,13 @@ module application.controllers {
 		
 		constructor(
 			private $scope: any,
-            private $rootScope: any,
             private $location: ng.ILocationService,
-            private $log: ng.ILogService,
-            private LoginService: services.LoginService,
-            private UIService: services.UIService
+            private AuthService: services.AuthService
 		){
 			this.$scope.vm = this;
             
             // If user is already logged in, redirect to homepage
-            if(this.LoginService.getUserState() == 1){
+            if(this.AuthService.getUserState() == 1){
                 this.$location.path(Routes.HOME);
             }
 		}
@@ -48,27 +45,7 @@ module application.controllers {
          * Log In user and redirect to homepage
          */
         private login() {
-            this.UIService.showLoader();
-            this.LoginService.login()
-            .then(
-                () => {
-                    this.$location.path(Routes.HOME);
-                    this.$scope.$apply();
-                    this.UIService.showAlert(
-                        StringF.format(
-							Strings.SUCCESS_USER_LOGGED_IN, 
-							this.$rootScope.user.name
-                        ),
-                        services.AlertService.OK
-                    );
-                    this.UIService.hideLoader();
-                },
-                (error) => {
-                    //TODO
-                    this.UIService.showAlert(error);
-                    this.UIService.hideLoader();
-                }
-             );
+            this.AuthService.authorizeUser();
         }
 	}
 }

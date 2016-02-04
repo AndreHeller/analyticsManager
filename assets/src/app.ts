@@ -14,26 +14,13 @@ module application {
         //Turn on debug output
 		$logProvider.debugEnabled(true);
 		
-		$routeProvider
-			.when(Routes.LOGIN, { 
-				controller: controllers.LoginCtrl,
-				templateUrl: 'app/templates/login.html'
-			})
-            .when(Routes.HOME, { 
-				controller: controllers.HomeCtrl,
-				templateUrl: 'app/templates/home.html'
-			}) 
-			.otherwise({redirectTo: '/'});
+        setRoutes($routeProvider);
+		
 	})
-    .run(['$rootScope','$location','$log','LoginService','UIService', function(
-            $rootScope: any, 
-            $location: ng.ILocationService, 
-            $log:ng.ILogService, 
-            LoginService: services.LoginService,
-            UIService: services.UIService) {
+    .run(['$rootScope','$log','AuthService', function($rootScope: any, $log:ng.ILogService, AuthService: services.AuthService){
 		
         //Set default initial data
-		setInitialData($rootScope);
+		setInitialData($rootScope, AuthService);
         
         //Register listener to watch route changes
 		$rootScope.$on('$routeChangeStart', (event, next, current) => {
@@ -42,8 +29,8 @@ module application {
                 //Set current section
                 $rootScope.currentSection = next.$$route.originalPath;
                 
-                //Check if use is logged in and if not redirect to login page
-                checkUserLoginState(LoginService,UIService,$log,$location,$rootScope);
+                //Authorize user on background or redirect to login page
+                AuthService.authorizeUserAutomatically();
                 
                 $log.debug(
                     '=======================================\n' +
@@ -56,12 +43,16 @@ module application {
                 $log.debug('APP: 404');
             }         
 		});
+        
     }]);
+    
+    
     
     /**
      * Directive & services & controllers
      */
-    app.service('LoginService', services.LoginService)
+    app.service('AuthService', services.AuthService)
+       .service('LoginService', services.LoginService)
        .service('UIService', services.UIService)
        .service('LoaderService', services.LoaderService)
        .service('AlertService', services.AlertService);
@@ -70,60 +61,38 @@ module application {
        .directive('alert', directives.Alert);
     
     
+    
+    
+    /**
+     * Set All routes settings
+     */
+    var setRoutes = function($routeProvider): void{
+        $routeProvider
+			.when(Routes.LOGIN, { 
+				controller: controllers.LoginCtrl,
+				templateUrl: 'app/templates/login.html'
+			})
+            .when(Routes.HOME, { 
+				controller: controllers.HomeCtrl,
+				templateUrl: 'app/templates/home.html'
+			}) 
+			.otherwise({redirectTo: '/'});
+    }
+    
+    
+    
+    
     /**
      * Set basic initial data for application
      */
-    var setInitialData = function($rootScope: any): void {
+    var setInitialData = function($rootScope: any, AuthService: services.AuthService): void {
         // Initiate system variables
-		$rootScope.user = {'logged': false}; 
+		AuthService.initUser();
+        
+        // Initiate system variables
+		$rootScope.sessionStarted = false; 
 		
 		// Sets the enviromanet (debug, production)
 		$rootScope.enviroment = 'debug';
-        
-        $rootScope.google = {};
-        $rootScope.google.client_id = '265759548418-ibp90bhfkiham5hij8ka7nf8bvvqd6j0.apps.googleusercontent.com';
-        $rootScope.google.scopes = [
-            'profile',
-            'https://www.googleapis.com/auth/plus.me'
-        ];
-    }
-    
-    /**
-     * Check User login state. 
-     * If is logged out or has invalid or expired token, redirect to LOGIN page.
-     */
-    var checkUserLoginState = function(LoginService: services.LoginService,
-                                       UIService: services.UIService,
-                                       $log: ng.ILogService,
-                                       $location: ng.ILocationService,
-                                       $rootScope: any){
-        
-        if(LoginService.getUserState() < 1){
-                
-            $log.debug('APP: User not logged.');
-            
-            if(LoginService.getUserState() == -1){
-                
-                $log.debug('APP: Found expired or invalid token.');
-                
-                LoginService.refreshToken()
-                .then(
-                    () => {
-                        $log.debug('APP: Token refreshed.');
-                    },
-                    (err) => {
-                        $log.error('APP: Token could not refresh.');
-                        $log.debug(err);
-                        
-                        $location.path( Routes.LOGIN );
-                        $rootScope.$apply();
-                    }
-                );
-            }
-            else {
-                $location.path( Routes.LOGIN );
-            } 
-        }
-        
     }
 }

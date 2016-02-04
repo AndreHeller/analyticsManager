@@ -1,6 +1,6 @@
 module application {
 	export class Strings {
-		public static ERROR_REQUEST_TIMEOUT: string = 'Promiň, ale někde se to zadrhlo. Zkontroluj připojení k internetu nebo to zkus později.';
+		public static ERROR_REQUEST_TIMEOUT: string = 'Promiň, trvá to nějak dlouho. Můžeš čekat dál, zkontrolovat připojení k internetu nebo to zkus později.';
 		public static ERROR_NOT_AUTHORIZED: string = 'Nepodařilo se autorizovat tvůj Google účet.\n Zpráva chyby: ';
         public static ERROR_IMMEDIATE_FAILED: string = 'Platnost tvého přihlášení zřejmě vypršela. Přihlaš se prosím znovu.\nPokud potíže přetrvávají obrať se na technickou podporu.';
         public static ERROR_PLUS_NOT_FOUND: string = 'Nepodařilo se stáhnout zdroje potřebné pro tvoji identifikaci.';
@@ -10,6 +10,8 @@ module application {
         
         
         public static SUCCESS_USER_LOGGED_IN: string = 'Nazdar %s! Přihlášení proběhlo v pohodě.';
+        public static SUCCESS_USER_LOGGED_IN_IMMEDIATE: string = 'Čus %s! Vítej zpět! Platnost tvého přihlášení byla prodloužena.';
+        public static SUCCESS_USER_LOGGED_OUT: string = 'Odhlášení proběhlo v pohodě.';
         
         
 		
