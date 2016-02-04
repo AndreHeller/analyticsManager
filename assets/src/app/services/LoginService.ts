@@ -1,7 +1,7 @@
 ///<reference path='../../reference.ts' />
 module application.services {
 	/**
-	 * This class represents main service, which is responsible for user authentification.
+	 * This class represents  service, which is responsible for user authentification.
      * 
      * It contact google api and authoriuzes Google Accounts, retrieve basic user info and manage user tokens.
 	 *
@@ -55,30 +55,6 @@ module application.services {
             this.$rootScope.user = {'logged': false};
             
             this.$location.path(Routes.LOGIN);
-        }
-        
-        
-        /**
-         * If user has saved token but its expired, refresh it.
-         */
-        public refreshToken(): Promises.Promise{
-            var d = new Promises.Deferred();
-            
-            this.checkAuth(true)
-            .then(() => {return this.loadUser();})
-            .then((user) => {this.saveUser(user);}) 
-            .then(
-                () => {
-                    
-                    d.fulfill();
-                },
-                () => {
-                    this.logout();
-                    d.reject();
-                }
-            );
-            
-            return d.promise();
         }
         
         
@@ -237,14 +213,16 @@ module application.services {
          * Save User info into rootscope
          */
         private saveUser(user): void {
-            this.$rootScope.user = {
+            var savedUser = {
                 'logged': true,
                 'name': user.result.name.givenName,
                 'lastName': user.result.name.familyName,
                 'image': user.result.image.url,
                 'googleId': user.result.id,
                 'time': new Date()
-            };
+            }
+            
+            this.$rootScope.user = savedUser;
         }
          
         

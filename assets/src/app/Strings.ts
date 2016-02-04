@@ -11,6 +11,7 @@ module application {
         
         public static SUCCESS_USER_LOGGED_IN: string = 'Nazdar %s! Přihlášení proběhlo v pohodě.';
         public static SUCCESS_USER_LOGGED_IN_IMMEDIATE: string = 'Čus %s! Vítej zpět! Platnost tvého přihlášení byla prodloužena.';
+        public static SUCCESS_USER_LOGGED_OUT: string = 'Odhlášení proběhlo v pohodě.';
         
         
 		
