@@ -12,7 +12,7 @@ module application.services {
 	//== CLASS ATTRIBUTES ==========================================================
 			
 		//Angular DI 
-		public static $inject = ['$rootScope', '$log','$window'];
+		public static $inject = ['$rootScope', '$log','$window','$location'];
 		
 	//== INSTANCE ATTRIBUTES =======================================================
 	//== CLASS GETTERS AND SETTERS =================================================
@@ -24,7 +24,8 @@ module application.services {
 		constructor(  
             private $rootScope: any,
             private $log: ng.ILogService,
-            private $window: ng.IWindowService
+            private $window: ng.IWindowService,
+            private $location: ng.ILocationService
 		) {
 			
 		} 
@@ -53,6 +54,7 @@ module application.services {
             this.clearToken();
             this.$rootScope.user = {'logged': false};
             
+            this.$location.path(Routes.LOGIN);
         }
         
         
