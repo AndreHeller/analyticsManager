@@ -17,7 +17,7 @@ module application {
         setRoutes($routeProvider);
 		
 	})
-    .run(['$rootScope','$log','AuthService', function($rootScope: any, $log:ng.ILogService, AuthService: services.AuthService){
+    .run(['$rootScope','$log','$location','AuthService', function($rootScope: any, $log:ng.ILogService, $location: ng.ILocationService, AuthService: services.AuthService){
 		
         //Set default initial data
 		setInitialData($rootScope, AuthService);
@@ -26,8 +26,9 @@ module application {
 		$rootScope.$on('$routeChangeStart', (event, next, current) => {
 			
             if(next.$$route){
+                
                 //Set current section
-                $rootScope.currentSection = next.$$route.originalPath;
+                $rootScope.currentSectionPath = $location.url();
                 
                 //Authorize user on background or redirect to login page
                 AuthService.authorizeUserAutomatically();
@@ -45,7 +46,7 @@ module application {
 		});
         
     }]);
-    
+     
     
     
     /**
@@ -58,7 +59,8 @@ module application {
        .service('AlertService', services.AlertService);
     
     app.directive('loader', directives.Loader)
-       .directive('alert', directives.Alert);
+       .directive('alert', directives.Alert)
+       .directive('navigation', directives.Navigation);
     
     
     
@@ -68,15 +70,15 @@ module application {
      */
     var setRoutes = function($routeProvider): void{
         $routeProvider
-			.when(Routes.LOGIN, { 
+			.when(Routes.getRoutePath('login'), { 
 				controller: controllers.LoginCtrl,
-				templateUrl: 'app/templates/login.html'
+				templateUrl: Routes.getRouteTemplateUrl('login')
 			})
-            .when(Routes.HOME, { 
+            .when(Routes.getRoutePath('home'), { 
 				controller: controllers.HomeCtrl,
-				templateUrl: 'app/templates/home.html'
+				templateUrl: Routes.getRouteTemplateUrl('home')
 			}) 
-			.otherwise({redirectTo: '/'});
+			.otherwise({redirectTo: Routes.getRoutePath('home')});
     }
     
     
@@ -94,5 +96,8 @@ module application {
 		
 		// Sets the enviromanet (debug, production)
 		$rootScope.enviroment = 'debug';
+        
+        // Set default dection
+        $rootScope.currentSectionPath = Routes.getDefaultSectionPath();
     }
 }

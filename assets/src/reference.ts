@@ -20,3 +20,5 @@
 
 ///<reference path="./app/directives/loader/Loader.ts" />
 ///<reference path="./app/directives/alert/Alert.ts" />
+///<reference path="./app/directives/navigation/Navigation.ts" />
+///<reference path="./app/directives/navigation/NavigationCtrl.ts" />

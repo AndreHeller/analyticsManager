@@ -68,7 +68,7 @@ module application.services {
             this.clearUser();
 
             
-            this.$location.path(Routes.LOGIN);
+            this.$location.path(Routes.getRoutePath('login'));
         }
         
         

@@ -54,7 +54,7 @@ module application.services {
          *                 Based on Routes class.
          */
         public authorizeUser(redirect?: string): void {
-            redirect = redirect || Routes.HOME;
+            redirect = redirect || Routes.getRoutePath('home');
             
             this.UIService.showLoader();
             this.LoginService.login()
@@ -66,7 +66,8 @@ module application.services {
 							Strings.SUCCESS_USER_LOGGED_IN, 
 							this.getUserInfo().name
                         ),
-                        services.AlertService.OK
+                        services.AlertService.OK,
+                        30000
                     );
                     this.$rootScope.$apply();
                     this.UIService.hideLoader();
@@ -102,7 +103,8 @@ module application.services {
                                 application.Strings.SUCCESS_USER_LOGGED_IN_IMMEDIATE, 
                                 this.getUserInfo().name
                             ),
-                            'success');
+                            services.AlertService.OK,
+                            30000);
                             this.$rootScope.$apply();
                         },
                         (err) => {
@@ -111,7 +113,7 @@ module application.services {
                             
                             this.logout();
                             
-                            this.$location.path( Routes.LOGIN );
+                            this.$location.path( Routes.getRoutePath('login') );
                             this.$rootScope.$apply();
                         }
                     );
@@ -122,7 +124,7 @@ module application.services {
                     
                     this.$log.debug('AuthService: User not logged.');
                     
-                    this.$location.path( Routes.LOGIN );
+                    this.$location.path( Routes.getRoutePath('login') );
                     break;
                     
                 //Logged in user
@@ -141,7 +143,7 @@ module application.services {
                                 
                                 this.UIService.showAlert(Strings.ERROR_USER_DATA)
                                 
-                                this.$location.path( Routes.LOGIN );
+                                this.$location.path( Routes.getRoutePath('login') );
                                 this.$rootScope.$apply();
                             }
                         );
@@ -165,10 +167,10 @@ module application.services {
          */
         public logout(alert?:boolean): void {
             this.LoginService.logout();
-            this.$log.error('AuthService: User logged out.');
+            this.$log.debug('AuthService: User logged out.');
             
             if(alert){
-                this.UIService.showAlert(Strings.SUCCESS_USER_LOGGED_OUT,'success', 30000);
+                this.UIService.showAlert(Strings.SUCCESS_USER_LOGGED_OUT,services.AlertService.OK, 30000);
             }
         }
         
