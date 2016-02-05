@@ -68,7 +68,7 @@ module application.services {
 						this.hideLoader();
 						this.showAlert(Strings.ERROR_REQUEST_TIMEOUT);
 					},
-					5000 //Timeout
+					30000 //Timeout
 				);
 				
 				this.loaderSvc.showLoader();
