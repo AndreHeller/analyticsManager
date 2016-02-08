@@ -1,44 +1,66 @@
+///<reference path="../reference.ts" />
 module application {
-	export class Routes {
+	export interface Route {
+        path: string;
+        template: string;
+        name: string;
+        groups: string[];
+        controller: any;
+    }
+    
+    export class Routes {
 		
-        private static TEMPLATES_PATH: string = 'app/templates/';
+        private defaultSection = 'home';
         
-        private static defaultSectionPath = '/';
+        private templatePath: string = 'app/templates/';
         
-        private static sectionnames = [
-            'home','login'
-        ];
+        private defaultSectionPath = '/';
         
-        private static sections: Object = {
-            'home': {
+        private sections: util.StringMap<Route> = new util.StringMap<Route>();
+        
+        
+        constructor(){
+            this.sections.put('home',{
                 path: '/',
                 template: 'home.html',
                 name: 'Home',
-                groups: ['always']
-            },
-            'login': {
+                groups: ['always'],
+                controller: controllers.HomeCtrl
+            })
+            .put('login',{
                 path: '/login',
                 template: 'login.html',
                 name: 'Login',
-                groups: ['anonymous']
-            }
+                groups: ['anonymous'],
+                controller: controllers.LoginCtrl
+            })
+            .put('ga', {
+                path: '/ga',
+                template: 'ga.html',
+                name: 'Google Analytics',
+                groups: ['loginOnly'],
+                controller: controllers.GACtrl
+            }); 
         }
         
-        public static getRoutePath(route: string): string{
-            return Routes.sections[route].path;
+        
+        public  getRoutePath(route: string): string{
+            return this.sections.get(route).path;
         }
         
-        public static getRouteTemplateUrl(route: string): string {
-            return Routes.TEMPLATES_PATH + Routes.sections[route].template;
+        
+        public getDefaultSectionPath(): string {
+            return this.getRoutePath(this.defaultSection);
         }
         
-        public static createMenuObject(): Object[] {
-            var menus = [];
+        
+        public  createMenuObject(): Object[] {
+            var menus = [],
+                routes = this.sections.toArray();
             
-            for(var i: number = 0; i < Routes.sectionnames.length; i++){
-                var route = Routes.sections[Routes.sectionnames[i]],
+            for(var i: number = 0; i < this.sections.getSize(); i++){
+                var route = routes[i],
                     routeObject: any = {};
-                    
                     
                     routeObject.name = route.name;
                     routeObject.link = route.path;
@@ -51,8 +73,19 @@ module application {
             return menus;
         }
         
-        public static getDefaultSectionPath(): string {
-            return Routes.defaultSectionPath;
-        }
+        
+        public setRoutes($routeProvider){
+            var sectionObjects = this.sections.toArray();
+            
+            for(var i:number = 0; i < sectionObjects.length; i++){
+                $routeProvider
+                    .when(sectionObjects[i].path, { 
+                        controller: sectionObjects[i].controller,
+                        templateUrl: this.templatePath + sectionObjects[i].template
+                    })
+            }
+            
+            $routeProvider.otherwise({redirectTo: this.sections.get(this.defaultSection).path});
+        };
 	}
 }

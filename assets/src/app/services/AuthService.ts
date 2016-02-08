@@ -54,7 +54,7 @@ module application.services {
          *                 Based on Routes class.
          */
         public authorizeUser(redirect?: string): void {
-            redirect = redirect || Routes.getRoutePath('home');
+            redirect = redirect || this.$rootScope.routes.getRoutePath('home');
             
             this.UIService.showLoader();
             this.LoginService.login()
@@ -113,7 +113,7 @@ module application.services {
                             
                             this.logout();
                             
-                            this.$location.path( Routes.getRoutePath('login') );
+                            this.$location.path( this.$rootScope.routes.getRoutePath('login') );
                             this.$rootScope.$apply();
                         }
                     );
@@ -124,7 +124,7 @@ module application.services {
                     
                     this.$log.debug('AuthService: User not logged.');
                     
-                    this.$location.path( Routes.getRoutePath('login') );
+                    this.$location.path( this.$rootScope.routes.getRoutePath('login') );
                     break;
                     
                 //Logged in user
@@ -143,7 +143,7 @@ module application.services {
                                 
                                 this.UIService.showAlert(Strings.ERROR_USER_DATA)
                                 
-                                this.$location.path( Routes.getRoutePath('login') );
+                                this.$location.path( this.$rootScope.routes.getRoutePath('login') );
                                 this.$rootScope.$apply();
                             }
                         );

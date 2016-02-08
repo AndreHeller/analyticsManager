@@ -68,7 +68,7 @@ module application.services {
             this.clearUser();
 
             
-            this.$location.path(Routes.getRoutePath('login'));
+            this.$location.path(this.$rootScope.routes.getRoutePath('login'));
         }
         
         
@@ -102,6 +102,7 @@ module application.services {
             else {
                 this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.');
                 this.$log.error('LoginService: Rejecting user data refresh.');
+                this.logout();
                 d.reject();    
             }
             
@@ -192,7 +193,8 @@ module application.services {
             else {
                 this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.');
                 this.$log.error('LoginService: Rejecting authorize.');
-                d.reject(Strings.ERROR_TECH_PLEASE_REPEAT);                    
+                this.logout();
+                d.reject(Strings.ERROR_TECH_PLEASE_REPEAT);           
             }
                 
             this.$log.debug('LoginService: Returning authorize promise.');    

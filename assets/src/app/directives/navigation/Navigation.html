@@ -5,7 +5,14 @@
 		</div>
 		<div>
 			<ul class="nav navbar-nav" >
-				<li ng-if="vm.showMenu(menu.groups)" ng-class="{'active': vm.showActiveClass(menu.link)}" ng-repeat="menu in menus"><a ng-href="/#{{menu.link}}">{{menu.name}}</a></li>
+				<li ng-if="vm.showMenu(menu.groups)" ng-class="{'active': vm.showActiveClass(menu.link)}" ng-repeat="menu in menus">
+                    <a ng-href="/#{{menu.link}}">{{menu.name}}</a>
+                    <ul class="dropdown-menu">
+                        <li><a ng-href="/#/">Zobrazit profil</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a ng-click="vm.logout()"><span class="glyphicon glyphicon-log-out"></span> Odhlásit</a></li>
+                    </ul>
+                </li>
 			</ul>
 		</div>
 		<div>

@@ -3,6 +3,7 @@
 
 ///<reference path="./util/Promises/Promise.ts" />
 ///<reference path="./util/StringF.ts" />
+///<reference path="./util/StringMap.ts" />
 
 ///<reference path="./app/Routes.ts" />
 ///<reference path="./app/Strings.ts" />
@@ -11,6 +12,7 @@
 
 ///<reference path="./app/controllers/HomeCtrl.ts" />
 ///<reference path="./app/controllers/LoginCtrl.ts" />
+///<reference path="./app/controllers/GACtrl.ts" />
 
 ///<reference path="./app/services/AuthService.ts" />
 ///<reference path="./app/services/LoginService.ts" />

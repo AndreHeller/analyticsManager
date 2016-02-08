@@ -2,7 +2,8 @@
 
 module application {
     
-    var app = angular.module('Application', ['ngRoute', 'templates']);
+    var app = angular.module('Application', ['ngRoute', 'templates']),
+        routes = new Routes();
     
     /**
 	 * App configuration. 
@@ -14,7 +15,7 @@ module application {
         //Turn on debug output
 		$logProvider.debugEnabled(true);
 		
-        setRoutes($routeProvider);
+        routes.setRoutes($routeProvider);
 		
 	})
     .run(['$rootScope','$log','$location','AuthService', function($rootScope: any, $log:ng.ILogService, $location: ng.ILocationService, AuthService: services.AuthService){
@@ -63,27 +64,6 @@ module application {
        .directive('navigation', directives.Navigation);
     
     
-    
-    
-    /**
-     * Set All routes settings
-     */
-    var setRoutes = function($routeProvider): void{
-        $routeProvider
-			.when(Routes.getRoutePath('login'), { 
-				controller: controllers.LoginCtrl,
-				templateUrl: Routes.getRouteTemplateUrl('login')
-			})
-            .when(Routes.getRoutePath('home'), { 
-				controller: controllers.HomeCtrl,
-				templateUrl: Routes.getRouteTemplateUrl('home')
-			}) 
-			.otherwise({redirectTo: Routes.getRoutePath('home')});
-    }
-    
-    
-    
-    
     /**
      * Set basic initial data for application
      */
@@ -98,6 +78,9 @@ module application {
 		$rootScope.enviroment = 'debug';
         
         // Set default dection
-        $rootScope.currentSectionPath = Routes.getDefaultSectionPath();
+        $rootScope.currentSectionPath = routes.getDefaultSectionPath();
+        
+        // Set reference to Routes class instace
+        $rootScope.routes = routes;
     }
 }

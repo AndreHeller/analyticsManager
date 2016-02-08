@@ -26,7 +26,7 @@ module application.directives {
 			private AuthService: services.AuthService
 		){
 			this.$scope.vm = this;
-			this.$scope.menus = Routes.createMenuObject();
+			this.$scope.menus = this.$rootScope.routes.createMenuObject();
 		}
 		
 	//== INSTANCE GETTERS AND SETTERS ==============================================
@@ -81,6 +81,20 @@ module application.directives {
 			else return false;
 		}
 		
+        
+        /**
+		 * Retrieve information if provided link belongs to current section.
+		 * This method is called from a view as a pointer where should be placed class "active".
+		 */
+		public showDropdownClass(link): boolean {
+			if(this.$rootScope.currentSectionPath.match(link)){
+				if(link == "/" && this.$rootScope.currentSectionPath != "/"){
+					return false;
+				}
+				return true;
+			}
+			else return false;
+		}
 		
 		
 		public isUserLogged(): boolean {
@@ -97,7 +111,7 @@ module application.directives {
         }
         
         public getRoutePath(route: string){
-            return Routes.getRoutePath(route);
+            return this.$rootScope.routes.getRoutePath(route);
         }
         
         
