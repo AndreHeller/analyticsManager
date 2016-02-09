@@ -71,14 +71,26 @@ module application.directives {
 		 * Retrieve information if provided link belongs to current section.
 		 * This method is called from a view as a pointer where should be placed class "active".
 		 */
-		public showActiveClass(link): boolean {
-			if(this.$rootScope.currentSectionPath.match(link)){
-				if(link == "/" && this.$rootScope.currentSectionPath != "/"){
-					return false;
-				}
-				return true;
-			}
-			else return false;
+		public showActiveClass(menu): boolean {
+            if(menu.subsections){
+                var subsections = menu.subsections.toArray();
+                for(var i: number = 0; i < subsections.length; i++){
+                    if(this.$rootScope.currentSectionPath.match(subsections[i].path)){
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            else {
+                if(this.$rootScope.currentSectionPath.match(menu.path)){
+                    if(menu.path == "/" && this.$rootScope.currentSectionPath != "/"){
+                        return false;
+                    }
+                    return true;
+                }
+                else return false;
+            }
 		}
 		
         
@@ -86,14 +98,11 @@ module application.directives {
 		 * Retrieve information if provided link belongs to current section.
 		 * This method is called from a view as a pointer where should be placed class "active".
 		 */
-		public showDropdownClass(link): boolean {
-			if(this.$rootScope.currentSectionPath.match(link)){
-				if(link == "/" && this.$rootScope.currentSectionPath != "/"){
-					return false;
-				}
-				return true;
-			}
-			else return false;
+		public showDropdownClass(menu): boolean {
+			if(menu.subsections){
+                return true;
+            }
+            return false
 		}
 		
 		

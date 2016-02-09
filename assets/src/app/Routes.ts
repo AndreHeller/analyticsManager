@@ -1,11 +1,12 @@
 ///<reference path="../reference.ts" />
 module application {
-	export interface Route {
-        path: string;
-        template: string;
+	export interface Section {
+        path?: string;
+        template?: string;
         name: string;
         groups: string[];
-        controller: any;
+        controller?: any;
+        subsections?: util.StringMap<Section>;
     }
     
     export class Routes {
@@ -14,9 +15,7 @@ module application {
         
         private templatePath: string = 'app/templates/';
         
-        private defaultSectionPath = '/';
-        
-        private sections: util.StringMap<Route> = new util.StringMap<Route>();
+        private sections: util.StringMap<Section> = new util.StringMap<Section>();
         
         
         constructor(){
@@ -35,11 +34,38 @@ module application {
                 controller: controllers.LoginCtrl
             })
             .put('ga', {
-                path: '/ga',
-                template: 'ga.html',
                 name: 'Google Analytics',
                 groups: ['loginOnly'],
-                controller: controllers.GACtrl
+                subsections: new util.StringMap<Section>().put(
+                    'ga.accounts',
+                        {
+                            path: '/ga/accounts',
+                            name: 'Accounts',
+                            template: 'ga_accounts.html',
+                            groups: ['loginOnly']
+                        }
+                    ).put(
+                    'ga.builder',
+                        {
+                            path: '/ga/builder',
+                            name: 'Builder',
+                            template: 'ga_builder.html',
+                            groups: ['loginOnly']
+                        }
+                    )
+            })
+            .put('gtm', {
+                name: 'Google Tag Manager',
+                groups: ['loginOnly'],
+                subsections: new util.StringMap<Section>().put(
+                    'gtm.accounts',
+                        {
+                            path: '/gtm/accounts',
+                            name: 'Accounts',
+                            template: 'gtm_accounts.html',
+                            groups: ['loginOnly']
+                        }
+                    )
             }); 
         }
         
@@ -62,8 +88,14 @@ module application {
                 var route = routes[i],
                     routeObject: any = {};
                     
+                    if(!route.subsections){
+                        routeObject.path = route.path;    
+                    }
+                    else {
+                        routeObject.subsections = route.subsections
+                    }
+                    
                     routeObject.name = route.name;
-                    routeObject.link = route.path;
                     routeObject.groups = route.groups;
                     
                     menus.push(routeObject);
@@ -78,11 +110,24 @@ module application {
             var sectionObjects = this.sections.toArray();
             
             for(var i:number = 0; i < sectionObjects.length; i++){
-                $routeProvider
-                    .when(sectionObjects[i].path, { 
-                        controller: sectionObjects[i].controller,
-                        templateUrl: this.templatePath + sectionObjects[i].template
-                    })
+                if(sectionObjects[i].subsections){
+                    var subsections = sectionObjects[i].subsections.toArray();
+                    for(var y: number = 0; y < subsections.length; y++){
+                        $routeProvider
+                            .when(subsections[y].path, { 
+                                controller: subsections[y].controller,
+                                templateUrl: this.templatePath + subsections[y].template
+                            })   
+                    }
+                }
+                else {
+                    $routeProvider
+                        .when(sectionObjects[i].path, { 
+                            controller: sectionObjects[i].controller,
+                            templateUrl: this.templatePath + sectionObjects[i].template
+                        })    
+                }
+                
             }
             
             $routeProvider.otherwise({redirectTo: this.sections.get(this.defaultSection).path});

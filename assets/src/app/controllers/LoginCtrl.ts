@@ -14,7 +14,7 @@ module application.controllers {
 	{
 	//== CLASS ATTRIBUTES ==========================================================	
 		
-		public static $inject = ['$scope','$location','AuthService']; 
+		public static $inject = ['$scope','$rootScope','$location','AuthService']; 
 		
 	//== INSTANCE ATTRIBUTES =======================================================
 	//== CLASS GETTERS AND SETTERS =================================================
@@ -25,6 +25,7 @@ module application.controllers {
 		
 		constructor(
 			private $scope: any,
+            private $rootScope: any,
             private $location: ng.ILocationService,
             private AuthService: services.AuthService
 		){
@@ -32,7 +33,7 @@ module application.controllers {
             
             // If user is already logged in, redirect to homepage
             if(this.AuthService.getUserState() == 1){
-                this.$location.path(Routes.HOME);
+                this.$location.path(this.$rootScope.routes.get('home'));
             }
 		}
 		
