@@ -18,7 +18,7 @@ module application {
         routes.setRoutes($routeProvider);
 		
 	})
-    .run(['$rootScope','$log','$location','AuthService', function($rootScope: any, $log:ng.ILogService, $location: ng.ILocationService, AuthService: services.AuthService){
+    .run(['$rootScope','$log','$location','AuthService','UIService', function($rootScope: any, $log:ng.ILogService, $location: ng.ILocationService, AuthService: services.AuthService, UIService: services.UIService){
 		
         //Set default initial data
 		setInitialData($rootScope, AuthService);
@@ -43,6 +43,7 @@ module application {
             else {
                 //TODO 404
                 $log.debug('APP: 404');
+                UIService.showAlert(Strings.ERROR_404);
             }         
 		});
         

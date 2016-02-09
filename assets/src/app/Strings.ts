@@ -13,6 +13,8 @@ module application {
         public static SUCCESS_USER_LOGGED_IN_IMMEDIATE: string = 'Čus %s! Vítej zpět! Platnost tvého přihlášení byla prodloužena.';
         public static SUCCESS_USER_LOGGED_OUT: string = 'Odhlášení proběhlo v pohodě.';
         
+        public static ERROR_404: string = 'Promiň, ale vypadá to, že tahle stránka neexistuje.';
+        
         
 		
         
