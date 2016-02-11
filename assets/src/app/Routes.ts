@@ -42,7 +42,8 @@ module application {
                             path: '/ga/accounts',
                             name: 'Accounts',
                             template: 'ga_accounts.html',
-                            groups: ['loginOnly']
+                            groups: ['loginOnly'],
+                            controller: controllers.GAAccountsCtrl
                         } 
                     )
             }); 

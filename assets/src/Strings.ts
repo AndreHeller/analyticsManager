@@ -14,7 +14,7 @@ module application {
         public static SUCCESS_USER_LOGGED_OUT: string = 'Odhlášení proběhlo v pohodě.';
         
         public static ERROR_404: string = 'Promiň, ale vypadá to, že tahle stránka neexistuje.';
-        
+        public static ERROR_BASICDATA_NOT_LOAD: string = 'Nepodařilo se stáhnout pořebná data.';
    
 		
 	}

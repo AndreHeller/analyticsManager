@@ -1,5 +1,8 @@
 <h1 class="page-header">Accounts</h1>
-<div class="panel-group" id="accounts">			
+<div ng-if="!vm.showAccounts()">
+	Načítání......
+</div>
+<div ng-if="vm.showAccounts()" class="panel-group" id="accounts">			
 	<div class="panel panel-default" ng-repeat="account in accounts">
 		<div class="panel-heading collapse-hover" data-toggle="collapse" data-target="#accounts-{{account.id}}">
 			<h2 class="panel-title">

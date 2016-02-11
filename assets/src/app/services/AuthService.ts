@@ -109,7 +109,7 @@ module application.services {
                         },
                         (err) => {
                             this.$log.error('AuthService: Token could not refresh.');
-                            this.$log.debug(err);
+                            this.UIService.showAlert(err);
                             
                             this.logout();
                             

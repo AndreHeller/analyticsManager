@@ -12,7 +12,10 @@ module analytics.directives {
 	
 		public static $inject = ['$scope','$log','GAService'];
 	
-	//== INSTANCE ATTRIBUTES =======================================================	
+	//== INSTANCE ATTRIBUTES =======================================================
+	
+		private counter: number = 0;
+		
 	//== CLASS GETTERS AND SETTERS =================================================
 	//== OTHER NON-PRIVATE CLASS METHODS =========================================== 
 	
@@ -25,13 +28,43 @@ module analytics.directives {
 			private GAService: services.GAService
 		){
 			this.$scope.vm = this;
-			debugger;
-			this.$scope.accounts= this.GAService.getAllAccounts().toArray();
+			this.checkData();
 		}
 		
 	//== INSTANCE GETTERS AND SETTERS ==============================================
 	//== OTHER NON-PRIVATE INSTANCE METHODS ========================================		
 	//== PRIVATE AND AUXILIARY CLASS METHODS =======================================
-	//== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================		
+	//== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================
+	
+		private checkData(): void{
+			this.$log.debug('AccountsListCtrl: Checking data - GA Accounts');
+			
+			var accounts = this.GAService.getAllAccounts();
+			
+			if(!accounts){
+				var timeout = (Math.pow(2,this.counter) * 1000) + Math.random();
+				this.$log.debug('AccountsListCtrl: Accounts weren\'t loaded yet.\nSetting up timeout for ' + timeout/1000 + 's.')
+				if(this.counter < 6){
+					setTimeout(
+						() => {
+							return this.checkData()
+						},
+						timeout
+					);
+					this.counter++;	
+				}
+			}
+			else{
+				this.$log.debug('AccountsListCtrl: Data found.');
+				this.$scope.accounts = accounts.toArray();
+			}
+		}
+		
+		private showAccounts(): boolean{
+			if(this.$scope.accounts){
+				return true;
+			}
+			return false;
+		}		
 	}
 }
