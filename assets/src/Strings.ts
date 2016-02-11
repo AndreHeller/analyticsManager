@@ -15,9 +15,13 @@ module application {
         
         public static ERROR_404: string = 'Promiň, ale vypadá to, že tahle stránka neexistuje.';
         
-        
+   
 		
-        
+	}
+}
+
+module analytics {
+	export class Strings {
 		public static ERROR_ANALYTICS_NOT_FOUND: string = 'Nepodařilo se stáhnout knihovnu Google Analytics'; 
 		public static ERROR_ANALYTICS_NOT_RESPONSE: string = 'Služba Google Analytics momentálně neodpovídá.';
 		public static ERROR_ACCOUNT_SUMMARIES_SAVE: string = 'Nepodařilo s uložit informace o všech účtech.';
@@ -28,9 +32,5 @@ module application {
 		
 		public static WARN_PROPERTY_COMPLETE: string = 'Toto webové property je již kompletně stažené.';
 		public static WARN_ACCOUNT_COMPLETE: string = '';
-		
-		
-		
-		
 	}
 }

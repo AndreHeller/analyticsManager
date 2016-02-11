@@ -2,7 +2,7 @@
 
 module application {
     
-    var app = angular.module('Application', ['ngRoute', 'templates']),
+    var app = angular.module('Application', ['ngRoute', 'templates','GoogleAnalytics']),
         routes = new Routes();
     
     /**

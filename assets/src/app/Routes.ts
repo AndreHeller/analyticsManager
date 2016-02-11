@@ -43,28 +43,7 @@ module application {
                             name: 'Accounts',
                             template: 'ga_accounts.html',
                             groups: ['loginOnly']
-                        }
-                    ).put(
-                    'ga.builder',
-                        {
-                            path: '/ga/builder',
-                            name: 'Builder',
-                            template: 'ga_builder.html',
-                            groups: ['loginOnly']
-                        }
-                    )
-            })
-            .put('gtm', {
-                name: 'Google Tag Manager',
-                groups: ['loginOnly'],
-                subsections: new util.StringMap<Section>().put(
-                    'gtm.accounts',
-                        {
-                            path: '/gtm/accounts',
-                            name: 'Accounts',
-                            template: 'gtm_accounts.html',
-                            groups: ['loginOnly']
-                        }
+                        } 
                     )
             }); 
         }

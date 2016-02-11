@@ -1,0 +1,25 @@
+<h1 class="page-header">Accounts</h1>
+<div class="panel-group" id="accounts">			
+	<div class="panel panel-default" ng-repeat="account in accounts">
+		<div class="panel-heading collapse-hover" data-toggle="collapse" data-target="#accounts-{{account.id}}">
+			<h2 class="panel-title">
+				{{account.name}}
+			</h2>
+		</div>
+		<ul class="list-group collapse" id="accounts-{{account.id}}">
+			<li class="list-group-item" ng-repeat="property in account.properties.toArray()">
+				<div class="collapse-hover" data-toggle="collapse" data-target="#property-{{property.id}}">
+					<h5>
+						{{property.name}}
+						<span class="pull-right">{{property.id}}</span>
+					</h5>
+				</div>
+				<ul class="list-group collapse" id="property-{{property.id}}">
+					<li class="list-group-item" ng-repeat="profile in property.profiles.toArray()">
+						<a ng-href="/#/accounts/{{account.id}}/properties/{{property.id}}/profiles/{{profile.id}}/">{{profile.name}}</a>
+					</li>
+				</ul>
+			</li>
+		<ul>
+	</div>
+</div>
