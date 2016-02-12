@@ -4,8 +4,20 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Analytics Manager</title>
+    <script>
+      var onGapiLoad = function(){
+        console.log('Gapi Loaded');
+        var s = document.createElement('script'),
+            a = document.getElementsByTagName('script');
+        l = a[a.length-1];
+        s.src='//localhost:8080/scripts/app.js';
+        s.async=false;
+        l.parentNode.insertBefore(s,l);};
+    </script>
     
-    <script src="https://apis.google.com/js/client.js"></script>
+    
+    
+    
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
     <script src="https://code.angularjs.org/1.2.28/angular-route.min.js"></script>
     
@@ -17,7 +29,7 @@
     <!--<script src="src/angular.min.js"></script>
     <script src="src/angular-route.min.js"></script>-->  
   </head>
-  <body ng-app="Application">
+  <body>
     
     <loader></loader>
     
@@ -39,6 +51,10 @@
     <script src="src/bootstrap.min.js"></script>-->
     
     <!--<script src="/src/app.js"></script>-->
+    <!--<script src="//localhost:8080/scripts/app.js"></script>-->
+    
+    
     <script src="//localhost:8080/scripts/app.js"></script>
+    <script src="https://apis.google.com/js/client.js?onload=runApp"></script>
   </body>
 </html>

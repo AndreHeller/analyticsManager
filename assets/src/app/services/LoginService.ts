@@ -23,7 +23,8 @@ module application.services {
         
         public scopes: string[] = [
             'profile',
-            'https://www.googleapis.com/auth/plus.me'
+            'https://www.googleapis.com/auth/plus.me',
+            'https://www.googleapis.com/auth/analytics.readonly'
         ];
         
 	//== CLASS GETTERS AND SETTERS =================================================
