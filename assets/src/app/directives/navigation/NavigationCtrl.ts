@@ -42,9 +42,7 @@ module application.directives {
                 switch (groups[i]) {
                     
                     case 'always':
-                        if(this.AuthService.getUserState() === 0){
-                            return false;
-                        }
+                        
                         return true;
                     
                     case 'anonymous':

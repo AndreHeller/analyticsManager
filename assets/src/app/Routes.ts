@@ -23,7 +23,7 @@ module application {
                 path: '/',
                 template: 'home.html',
                 name: 'Home',
-                groups: ['always'],
+                groups: ['loginOnly'],
                 controller: controllers.HomeCtrl
             })
             .put('login',{
@@ -46,7 +46,21 @@ module application {
                             controller: controllers.GAAccountsCtrl
                         } 
                     )
-            }); 
+            })
+            .put('tools', {
+                name: 'Tools',
+                groups: ['loginOnly'],
+                subsections: new util.StringMap<Section>().put(
+                    'tools.hitBuilder',
+                        {
+                            path: '/tools/hit-builder',
+                            name: 'Hit Builder',
+                            template: 'tools_hitBuilder.html',
+                            groups: ['loginOnly'],
+                            controller: controllers.HitBuilderCtrl
+                        }
+                    )
+            });; 
         }
         
         
@@ -54,9 +68,32 @@ module application {
             return this.sections.get(route).path;
         }
         
+        public  getRouteGroups(route: string): string[]{
+            return this.sections.get(route).groups;
+        }
+        
         
         public getDefaultSectionPath(): string {
             return this.getRoutePath(this.defaultSection);
+        }
+        
+        
+        public getRouteGroupsFromTemplatePath(path: string): string[]{
+            debugger;
+            if(path != 'home'){
+                var parts = path.split('/'),
+                    templatePathDirsCount = this.templatePath.split('/').length-1;
+                
+                if(parts.length - templatePathDirsCount > 2){
+                    var main = this.sections.get(parts[templatePathDirsCount])
+                    return main.subsections.get(parts[templatePathDirsCount+1]).groups;
+                }
+                else {
+                    var routename = parts[templatePathDirsCount].split('.')[0];
+                    return this.getRouteGroups(routename);
+                }
+            }
+            else return this.getRouteGroups('home');
         }
         
         

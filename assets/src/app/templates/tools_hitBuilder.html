@@ -1,0 +1,157 @@
+<h1>Hit builder</h1>
+
+{{params}}
+<br>
+{{optParams}}
+	<div>
+		<div class="row">
+			<div class="form-group col-sm-12 bs-callout">
+				<h4>Not validate yet</h4>
+				<p>Hit hasn't been validate yet</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-12">
+				<div class="input-group">
+					<div class="input-group-addon" title="Randomly Generate UUID">
+						/collect?
+					</div>
+					<input class="form-control" type="text" name="cid" id="cid" />
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-3">
+				<button class="btn btn-primary">Validate hit</button>
+			</div>
+		</div>
+	</div>
+	<hr>
+	
+	<div class="row">
+		<div class="form-group col-sm-1">
+			<label for="v">v</label>
+			<input type="text" class="form-control" name="v" id="v" value="1" readonly >
+			<p class="help-block">Version.</p>
+		</div>
+		<div class="form-group col-sm-3">
+			<label for="t">t</label>
+			<select class="form-control selectpicker" name="t" id="t" ng-model="params.t">
+				<option value="pageview">pageview</option>
+				<option value="event">event</option>
+				<option value="transaction">transaction</option>
+				<option value="item">item</option>
+				<option value="social">social</option>
+				<option value="timing">timing</option>
+				<option value="screenview">screenview</option>
+				<option value="exception">exception</option>
+			</select>
+			<p class="help-block">Hit type.</p>
+		</div>
+		<div class="form-group col-sm-3">
+			<label for="tid">tid</label>
+			<input class="form-control" placeholder="UA-XXXXX-Y" type="text" name="tid" id="tid" ng-model="params.tid" />
+			<p class="help-block">Google Analytics Tracking ID.</p>
+		</div>
+		<div class="form-group col-sm-5">
+			<label for="cid">cid</label>
+			<div class="input-group">
+				<input class="form-control" type="text" name="cid" id="cid" ng-model="params.cid"/>
+				<div class="input-group-addon btn" title="Randomly Generate UUID">
+					<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+				</div>
+			</div>
+			<p class="help-block">Client ID.</p>
+		</div>
+	</div>
+	<hr>
+	<div id="params">
+		<div class="row" ng-if="optParams.length > 0">
+			<div class="form-group col-sm-2">
+				<p class="form-control-static" type="text" name="tid" id="tid" >Param name</p>
+			</div>
+			<div class="form-group col-sm-9">
+				<p class="form-control-static" type="text" name="tid" id="tid" >Value</p>
+			</div>
+			
+		</div>
+		<div class="row" ng-repeat="(index, optParam) in optParams">
+			<div class="form-group col-sm-2">
+				<input class="form-control" type="text" name="{{optParams[index].key}}" id="{{optParams[index].key}}" ng-model="optParams[index].key"/>
+			</div>
+			<div class="form-group col-sm-9">
+				<input class="form-control" type="text" name="{{optParams[index].value}}" id="{{optParams[index].value}}" ng-model="optParams[index].value"/>
+			</div>
+			<div class="form-group col-sm-1">
+				<button class="btn btn-danger" ng-click="vm.removeParamRow(index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+			</div>
+		</div>
+		
+	</div> 
+	<div class="row">
+		<div class="form-group col-sm-12">
+			<button class="btn" ng-click="vm.addParamRow();"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add parameter</button>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	<!--
+	
+	
+	<div>
+		<div class="row">
+			<div class="form-group col-sm-12 bs-callout bs-callout-danger">
+				<h4>Invalidate hit</h4>
+				<ul>
+					<li>Param dp is not optional.</li>
+				</ul>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-12 has-error has-feedback">
+				<div class="input-group">
+					<div class="input-group-addon" title="Randomly Generate UUID">
+						/collect?
+					</div>
+					<input class="form-control" type="text" name="cid" id="cid" />
+					<span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-3">
+				<button class="btn btn-danger">Revalidate hit</button>
+			</div>
+		</div>
+	</div>
+	<hr>
+	
+	
+	<div>
+		<div class="row">
+			<div class="form-group col-sm-12 bs-callout bs-callout-success">
+				<h4>Hit valid</h4>
+				<p>Congratulations yout hit is valid.</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-12 has-success has-feedback">
+				<div class="input-group">
+					<div class="input-group-addon" title="Randomly Generate UUID">
+						/collect?
+					</div>
+					<input class="form-control" type="text" name="cid" id="cid" />
+					<span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-sm-3">
+				<button class="btn btn-success"><span class="glyphicon glyphicon-send" aria-hidden="true"></span> &nbsp;&nbsp;Send hit to Google Analytics</button>
+			</div> 
+		</div>
+	</div>
+	<hr>-->
