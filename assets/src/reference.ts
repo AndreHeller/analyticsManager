@@ -19,6 +19,7 @@
 ///<reference path="./app/services/UIService.ts" />
 ///<reference path="./app/services/LoaderService.ts" />
 ///<reference path="./app/services/AlertService.ts" />
+///<reference path="./app/services/UUIDService.ts" />
 
 ///<reference path="./app/directives/loader/Loader.ts" />
 ///<reference path="./app/directives/alert/Alert.ts" />
