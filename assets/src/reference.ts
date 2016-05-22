@@ -12,6 +12,7 @@
 ///<reference path="./app/controllers/HomeCtrl.ts" />
 ///<reference path="./app/controllers/LoginCtrl.ts" />
 ///<reference path="./app/controllers/GAAccountsCtrl.ts" />
+///<reference path="./app/controllers/GAReportsCtrl.ts" />
 
 ///<reference path="./app/services/AuthService.ts" />
 ///<reference path="./app/services/LoginService.ts" />

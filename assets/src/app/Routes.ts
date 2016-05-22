@@ -46,6 +46,16 @@ module application {
                             controller: controllers.GAAccountsCtrl
                         } 
                     )
+                    .put( 
+                    'ga.report',
+                        {
+                            path: '/ga/accounts/:accountId/:propertyId/:profileId',
+                            name: 'Reports',
+                            template: 'ga_reports.html',
+                            groups: ['none'],
+                            controller: controllers.GAReportsCtrl
+                        } 
+                    ) 
             }); 
         }
         
@@ -66,19 +76,21 @@ module application {
             
             for(var i: number = 0; i < this.sections.getSize(); i++){
                 var route = routes[i],
-                    routeObject: any = {};
                     
-                    if(!route.subsections){
-                        routeObject.path = route.path;    
-                    }
-                    else {
-                        routeObject.subsections = route.subsections
-                    }
-                    
-                    routeObject.name = route.name;
-                    routeObject.groups = route.groups;
-                    
-                    menus.push(routeObject);
+                        routeObject: any = {};
+                        
+                        if(!route.subsections){
+                            routeObject.path = route.path;    
+                        }
+                        else {
+                            routeObject.subsections = route.subsections
+                        }
+                        
+                        routeObject.name = route.name;
+                        routeObject.groups = route.groups;
+                        
+                        menus.push(routeObject);
+                   
             }
             
             

@@ -1,26 +1,46 @@
-angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("app/templates/home.html","<h1>Angular Template Project</h1>\n{{$root.user.logged}}<br>\n{{$root.user.name}}");
-$templateCache.put("app/templates/login.html","<h1>Login</h1> \r\n\r\n<button class=\"btn\" id=\"authorize-button\" ng-click=\"vm.login();\">Authorize</button>  ");
+angular.module("templates", []).run(["$templateCache", function($templateCache) {$templateCache.put("app/templates/ga_accounts.html","<accounts-list></accounts-list>");
+$templateCache.put("app/templates/ga_reports.html","<h1>Reports</h1>\r\n\r\n<div class=\"form-group\" ng-hide=\"csv\">\r\n    <h3>Import CSV file</h3>\r\n    <input type=\"file\" csv-reader results=\"csv\" />\r\n</div>\r\n\r\n<div class=\"block right\" ng-if=\"csv.length && !result.length\">\r\n    <h2>CSV file content</h2>\r\n\r\n    <div class=\"form-group\">\r\n        <button class=\"btn btn-primary\" ng-click=\"vm.calculatePV()\">Calculate pageviews</button>\r\n    </div>\r\n\r\n    <div class=\"content\">\r\n        <table class=\"table\">\r\n            <tr ng-repeat=\"url in csv\">\r\n                <td>{{url.path}}</td>\r\n            </tr>\r\n        </table>    \r\n    </div>\r\n</div>\r\n\r\n<div class=\"block right\" ng-if=\"result.length\">\r\n    <h2>404 pageviews</h2>\r\n\r\n\r\n    <div class=\"content\">\r\n        <table class=\"table\">\r\n            <tr ng-repeat=\"pagePath in result\">\r\n                <td>{{pagePath[0]}}</td>\r\n                <td>{{pagePath[1]}}</td>\r\n            </tr>\r\n        </table>\r\n    </div>\r\n</div>");
+$templateCache.put("app/templates/home.html","<h1>Angular Template Project</h1>\n{{$root.user.logged}}<br>\n{{$root.user.name}}");
+$templateCache.put("app/templates/login.html","<h1>Login</h1> \n\n<button class=\"btn\" id=\"authorize-button\" ng-click=\"vm.login();\">Authorize</button>  ");
+$templateCache.put("app/directives/loader/Loader.html","<div id=\"loader-launcher\">\n	<div id=\"loader-wrapper\">\n		<div id=\"loader\"></div>\n	\n		<div class=\"loader-section section-left\"></div>\n		<div class=\"loader-section section-right\"></div>\n	</div>\n</div>");
+$templateCache.put("app/directives/navigation/Navigation.html","<nav class=\"navbar navbar-inverse navbar-fixed-top\">\n	<div class=\"container-fluid\">\n		<div class=\"navbar-header\">\n			<a class=\"navbar-brand\" ng-href=\"/#/\">Analytics Manager</a>\n		</div>\n		<div>\n			<ul class=\"nav navbar-nav\" >\n				<li ng-if=\"vm.showMenu(menu.groups)\" ng-class=\"{\'active\': vm.showActiveClass(menu), \'dropdown\': vm.showDropdownClass(menu)}\" ng-repeat=\"menu in menus\">\n                    <a ng-href=\"/#{{menu.path}}\" ng-if=\"!vm.showDropdownClass(menu)\">{{menu.name}}</a>\n                    <!-- Direct link above /// dropdown menu below -->\n                    <a href=\"\" ng-if=\"vm.showDropdownClass(menu)\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">{{menu.name}}</a>\n                    <ul ng-if=\"vm.showDropdownClass(menu)\" class=\"dropdown-menu\">\n                        <li ng-if=\"vm.showMenu(subsection.groups)\" ng-repeat=\"subsection in menu.subsections.toArray()\"><a ng-href=\"/#{{subsection.path}}\">{{subsection.name}}</a></li>\n                    </ul>\n                </li>\n			</ul>\n		</div>\n		<div>\n			<ul class=\"nav navbar-nav navbar-right dropdown\"> \n				<li class=\"dropdown\" ng-if=\"vm.isUserLogged()\">\n				<a href=\"\" class=\"dropdown-toggle\" data-toggle=\"dropdown\" role=\"button\" aria-haspopup=\"true\" aria-expanded=\"false\">\n					<span class=\"glyphicon glyphicon-user\"></span>\n					{{vm.getUserName()}}\n					<span class=\"caret\"></span>\n				</a>\n				<ul class=\"dropdown-menu\">\n					<li><a ng-href=\"/#/\">Zobrazit profil</a></li>\n					<li role=\"separator\" class=\"divider\"></li>\n					<li><a ng-click=\"vm.logout()\"><span class=\"glyphicon glyphicon-log-out\"></span> Odhlásit</a></li>\n				</ul>\n				</li>\n				\n				<!--<li><a ng-href=\"#here\"><span class=\"glyphicon glyphicon-log-in\"></span> Login</a></li>-->\n			</ul>\n		</div>\n	</div>\n</nav>");
 $templateCache.put("app/directives/alert/Alert.html","<div class=\"alert\" ng-class=\"[\'alert-\' + type]\">\n	<button ng-click=\"close()\" class=\"close\" aria-label=\"close\">\n		<span aria-hidden=\"true\">&times;</span>\n	</button>\n	<span class=\"glyphicon\" ng-class=\"[\'glyphicon-\' + icon]\" aria-hidden=\"true\"></span>\n		<span class=\"sr-only\">{{altType}}</span>\n	<span ng-transclude></span>\n</div> ");
-$templateCache.put("app/directives/loader/Loader.html","<div id=\"loader-launcher\">\n	<div id=\"loader-wrapper\">\n		<div id=\"loader\"></div>\n	\n		<div class=\"loader-section section-left\"></div>\n		<div class=\"loader-section section-right\"></div>\n	</div>\n</div>");}]);
+$templateCache.put("modules/GoogleAnalytics/directives/accountsList/AccountsList.html","<h1 class=\"page-header\">Accounts</h1>\n<div ng-if=\"!vm.showAccounts()\">\n	Načítání......\n</div>\n<div ng-if=\"vm.showAccounts()\" class=\"panel-group\" id=\"accounts\">			\n	<div class=\"panel panel-default\" ng-repeat=\"account in accounts\">\n		<div class=\"panel-heading collapse-hover\" data-toggle=\"collapse\" data-target=\"#accounts-{{account.id}}\">\n			<h2 class=\"panel-title\">\n				{{account.name}}\n			</h2>\n		</div>\n		<ul class=\"list-group collapse\" id=\"accounts-{{account.id}}\">\n			<li class=\"list-group-item\" ng-repeat=\"property in account.properties.toArray()\">\n				<div class=\"collapse-hover\" data-toggle=\"collapse\" data-target=\"#property-{{property.id}}\">\n					<h5>\n						{{property.name}}\n						<span class=\"pull-right\">{{property.id}}</span>\n					</h5>\n				</div>\n				<ul class=\"list-group collapse\" id=\"property-{{property.id}}\">\n					<li class=\"list-group-item\" ng-repeat=\"profile in property.profiles.toArray()\">\n						<a ng-href=\"/#/ga/accounts/{{account.id}}/{{property.id}}/{{profile.id}}\">{{profile.name}}</a>\n					</li>\n				</ul>\n			</li>\n		<ul>\n	</div>\n</div>");}]);
 var application = application || {};
 (function (application) {
-    var directives;
-    (function (directives) {
-        function Alert($templateCache) {
-            return {
-                restrict: 'E',
-                template: $templateCache.get('app/directives/alert/Alert.html'),
-                scope: {
-                    type: '@',
-                    close: '=',
-                    icon: '@'
-                },
-                transclude: true
-            };
+    var Strings = (function () {
+        function Strings() {
         }
-        directives.Alert = Alert;
-    })(directives = application.directives || (application.directives = {}));
+        Strings.ERROR_REQUEST_TIMEOUT = 'Promiň, trvá to nějak dlouho. Můžeš čekat dál, zkontrolovat připojení k internetu nebo to zkus později.';
+        Strings.ERROR_NOT_AUTHORIZED = 'Nepodařilo se autorizovat tvůj Google účet.\n Zpráva chyby: ';
+        Strings.ERROR_IMMEDIATE_FAILED = 'Platnost tvého přihlášení zřejmě vypršela. Přihlaš se prosím znovu.\nPokud potíže přetrvávají obrať se na technickou podporu.';
+        Strings.ERROR_PLUS_NOT_FOUND = 'Nepodařilo se stáhnout zdroje potřebné pro tvoji identifikaci.';
+        Strings.ERROR_USER_DATA = 'Nepodařilo se stáhnout uživatelská data.';
+        Strings.ERROR_TECH_PLEASE_REPEAT = 'Došlo k technickým problémům. Zkus aplikaci načíst znovu.';
+        Strings.SUCCESS_USER_LOGGED_IN = 'Nazdar %s! Přihlášení proběhlo v pohodě.';
+        Strings.SUCCESS_USER_LOGGED_IN_IMMEDIATE = 'Čus %s! Vítej zpět! Platnost tvého přihlášení byla prodloužena.';
+        Strings.SUCCESS_USER_LOGGED_OUT = 'Odhlášení proběhlo v pohodě.';
+        Strings.ERROR_404 = 'Promiň, ale vypadá to, že tahle stránka neexistuje.';
+        Strings.ERROR_BASICDATA_NOT_LOAD = 'Nepodařilo se stáhnout pořebná data.';
+        return Strings;
+    })();
+    application.Strings = Strings;
 })(application || (application = {}));
+var analytics;
+(function (analytics) {
+    var Strings = (function () {
+        function Strings() {
+        }
+        Strings.ERROR_ANALYTICS_NOT_FOUND = 'Nepodařilo se stáhnout knihovnu Google Analytics';
+        Strings.ERROR_ANALYTICS_NOT_RESPONSE = 'Služba Google Analytics momentálně neodpovídá.';
+        Strings.ERROR_ACCOUNT_SUMMARIES_SAVE = 'Nepodařilo s uložit informace o všech účtech.';
+        Strings.ERROR_PARCIAL_INSTANCE = 'Tato instance zatím nebyla stežena celá. Tuto metodu nelze použít.';
+        Strings.WARN_PROPERTY_COMPLETE = 'Toto webové property je již kompletně stažené.';
+        Strings.WARN_ACCOUNT_COMPLETE = '';
+        return Strings;
+    })();
+    analytics.Strings = Strings;
+})(analytics || (analytics = {}));
 
 
 
@@ -741,41 +761,582 @@ var StringF = StringF || {};
     StringF.format = format;
 })(StringF || (StringF = {}));
 
+var util = util || {};
+(function (util) {
+    var StringMap = (function () {
+        function StringMap() {
+            this.OBJECTS = {};
+            this.size = 0;
+            this.NAMES = [];
+            this.VALUES = [];
+        }
+        StringMap.prototype.put = function (key, value) {
+            this.OBJECTS[key] = value;
+            this.size++;
+            this.NAMES.push(key);
+            this.VALUES.push(value);
+            return this;
+        };
+        StringMap.prototype.get = function (key) {
+            return this.OBJECTS[key];
+        };
+        StringMap.prototype.names = function () {
+            return this.NAMES;
+        };
+        StringMap.prototype.getSize = function () {
+            return this.size;
+        };
+        StringMap.prototype.toArray = function () {
+            return this.VALUES;
+        };
+        StringMap.prototype.flush = function () {
+            this.NAMES = [];
+            this.size = 0;
+            this.OBJECTS = {};
+            this.VALUES = [];
+        };
+        return StringMap;
+    })();
+    util.StringMap = StringMap;
+})(util || (util = {}));
+
+///<reference path="./Promises/Promise.ts" />
+///<reference path="./StringF.ts" />
+///<reference path="./StringMap.ts" /> 
+
+
+
+///<reference path="../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var entities;
+    (function (entities) {
+        /**
+         * Instances of class WebProperty represent Google Analytics webproperty
+         * with all possible profiles and settings
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 07/2015
+         */
+        var WebProperty = (function () {
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS =========================================== 
+            /**
+             * Creates a new Webrpoeprty. Constructor should never be called directly.
+             * Use factory method in Accounts class instead.
+             */
+            function WebProperty(_id, _name, _internalId, _level, _accountId, profiles, $log) {
+                this._id = _id;
+                this._name = _name;
+                this._internalId = _internalId;
+                this._level = _level;
+                this._accountId = _accountId;
+                this.$log = $log;
+                //== CLASS ATTRIBUTES ==========================================================
+                //== INSTANCE ATTRIBUTES =======================================================
+                //If account instance was filly filled or its still parcial
+                this._parciality = true;
+                //Storage for profiles
+                this._profiles = new util.StringMap();
+                for (var i = 0; i < profiles.length; i++) {
+                    this.createProfile(profiles[i]);
+                }
+            }
+            Object.defineProperty(WebProperty.prototype, "name", {
+                //== INSTANCE GETTERS AND SETTERS ==============================================
+                get: function () {
+                    return this._name;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "id", {
+                get: function () {
+                    return this._id;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "internalId", {
+                get: function () {
+                    return this._internalId;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "level", {
+                //Standard / Premium
+                get: function () {
+                    return this._level;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "created", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._created;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "updated", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._updated;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "defaultProfileId", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._defaultProfileId;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "profileCount", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._profileCount;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "websiteUrl", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._websiteUrl;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "profiles", {
+                get: function () {
+                    return this._profiles;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "accountId", {
+                get: function () {
+                    return this._accountId;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(WebProperty.prototype, "parciality", {
+                get: function () {
+                    return this._parciality;
+                },
+                set: function (value) {
+                    this._parciality = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================	
+            /**
+             * Complete instance attributes and meka request for all properties
+             */
+            WebProperty.prototype.completePropertyInfo = function (property) {
+                this.created = property.created;
+                this.updated = property.updated;
+                this.defaultProfileId = property.defaultProfileId;
+                this.profileCount = property.profileCount;
+                this.websiteUrl = property.websiteUrl;
+                this.$log.debug("WEBPROPERTY: Property saved!");
+            };
+            /**
+             * Load the rest of instance if its parciality equals true or if optional param force equals true.
+             */
+            WebProperty.prototype.completeProfiles = function (force) {
+                var _this = this;
+                var d = new Promises.Deferred();
+                this.$log.debug("WEBPROPERTY: Starting complete profiles.\n- Force: " + force + "\n- Parciality: " + this.parciality);
+                if (force || this.parciality) {
+                    this.$log.debug("WEBPROPERTY: Property is parcial");
+                    this.downloadProfiles().then(function (response) {
+                        _this.$log.debug("WEBPROPERTY: Starting save profiles info.");
+                        for (var i = 0; i < response.result.items.length; i++) {
+                            var profile = _this.profiles.get(response.result.items[i].id);
+                            _this.$log.debug("WEBPROPERTY: Saving profile info: " + i);
+                            profile.completeProfileInfo(response.result.items[i]);
+                            profile.parciality = false;
+                        }
+                        _this.$log.debug("WEBPROPERTY: Fullfill complete profile promise.");
+                        d.fulfill();
+                    }, function (err) {
+                        _this.$log.error("WEBPROPERTY: Reject complete profile promise");
+                        d.reject(err);
+                    });
+                }
+                else {
+                    this.$log.error("WEBPROPERTY: This property is already completed.");
+                    //Aready completed								
+                    d.reject(analytics.Strings.WARN_PROPERTY_COMPLETE);
+                }
+                this.$log.debug("WEBPROPERTY: Return complete profiles promise.");
+                return d.promise();
+            };
+            //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
+            //== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================
+            /**
+             * Creates a new profile(view) and put it into profiles stringMap.
+             */
+            WebProperty.prototype.createProfile = function (profile) {
+                this.profiles.put(profile.id, new entities.Profile(profile.id, profile.name, profile.type, this.accountId, this.id, this.$log));
+            };
+            /**
+             * Make an API call for list all properties
+             */
+            WebProperty.prototype.downloadProfiles = function () {
+                var _this = this;
+                var d = new Promises.Deferred();
+                this.$log.debug("WEBPROPERTY: Contact API for profile list.");
+                gapi.client.analytics.management.profiles.list({ 'accountId': this.accountId, 'webPropertyId': this.id }).then(function (response) {
+                    _this.$log.debug("WEBPROPERTY: Fulfill profile list promise.");
+                    d.fulfill(response);
+                }, function (response) {
+                    _this.$log.debug("WEBPROPERTY: Reject profile list promise.");
+                    d.reject(response);
+                });
+                this.$log.debug("WEBPROPERTY: Return profile list promise");
+                return d.promise();
+            };
+            return WebProperty;
+        })();
+        entities.WebProperty = WebProperty;
+    })(entities = analytics.entities || (analytics.entities = {}));
+})(analytics || (analytics = {}));
+
+///<reference path="../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var entities;
+    (function (entities) {
+        /**
+         * Instances of class Profile represent Google Analytics profile
+         * with all settings
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 07/2015
+         */
+        var Profile = (function () {
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS =========================================== 
+            function Profile(_id, _name, _type, _accountId, _webPropertyId, $log) {
+                this._id = _id;
+                this._name = _name;
+                this._type = _type;
+                this._accountId = _accountId;
+                this._webPropertyId = _webPropertyId;
+                this.$log = $log;
+                //== CLASS ATTRIBUTES ==========================================================
+                //== INSTANCE ATTRIBUTES =======================================================
+                //If account instance was filly filled or its still parcial
+                this._parciality = true;
+            }
+            Object.defineProperty(Profile.prototype, "name", {
+                //== INSTANCE GETTERS AND SETTERS ==============================================
+                get: function () {
+                    return this._name;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "id", {
+                get: function () {
+                    return this._id;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "accountId", {
+                get: function () {
+                    return this._accountId;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "webPropertyId", {
+                get: function () {
+                    return this._accountId;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "parciality", {
+                get: function () {
+                    return this._parciality;
+                },
+                set: function (value) {
+                    this._parciality = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "created", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._created;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "updated", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._updated;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "currency", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._currency;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "defaultPage", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._defaultPage;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "eCommerceTracking", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._eCommerceTracking;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "enhancedECommerceTracking", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._enhancedECommerceTracking;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "excludeQueryParameters", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._excludeQueryParameters;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "siteSearchQueryParameters", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._siteSearchQueryParameters;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "siteSearchCategoryParameters", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._siteSearchCategoryParameters;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "stripSiteSearchQueryParameters", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._stripSiteSearchQueryParameters;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "stripSiteSearchCategoryParameters", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._stripSiteSearchCategoryParameters;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "timezone", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._timezone;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Profile.prototype, "websiteUrl", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._websiteUrl;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================
+            /**
+             * Complete instance attributes and meka request for all properties
+             */
+            Profile.prototype.completeProfileInfo = function (profile) {
+                this.created = profile.created;
+                this.updated = profile.updated;
+                this.currency = profile.currency;
+                this.defaultPage = profile.defaultPage;
+                this.eCommerceTracking = profile.eCommerceTracking;
+                this.enhancedECommerceTracking = profile.enhancedECommerceTracking;
+                this.excludeQueryParameters = profile.excludeQueryParameters;
+                this.siteSearchQueryParameters = profile.siteSearchQueryParameters;
+                this.siteSearchCategoryParameters = profile.siteSearchCategoryParameters;
+                this.stripSiteSearchQueryParameters = profile.stripSiteSearchQueryParameters;
+                this.stripSiteSearchCategoryParameters = profile.stripSiteSearchCategoryParameters;
+                this.timezone = profile.timezone;
+                this.websiteUrl = profile.websiteUrl;
+                this.$log.debug("PROFILE: Profile saved!");
+            };
+            return Profile;
+        })();
+        entities.Profile = Profile;
+    })(entities = analytics.entities || (analytics.entities = {}));
+})(analytics || (analytics = {}));
+
+///<reference path="../reference.ts" />
 var application = application || {};
 (function (application) {
     var Routes = (function () {
         function Routes() {
+            this.defaultSection = 'home';
+            this.templatePath = 'app/templates/';
+            this.sections = new util.StringMap();
+            this.sections.put('home', {
+                path: '/',
+                template: 'home.html',
+                name: 'Home',
+                groups: ['always'],
+                controller: application.controllers.HomeCtrl
+            })
+                .put('login', {
+                path: '/login',
+                template: 'login.html',
+                name: 'Login',
+                groups: ['anonymous'],
+                controller: application.controllers.LoginCtrl
+            })
+                .put('ga', {
+                name: 'Google Analytics',
+                groups: ['loginOnly'],
+                subsections: new util.StringMap().put('ga.accounts', {
+                    path: '/ga/accounts',
+                    name: 'Accounts',
+                    template: 'ga_accounts.html',
+                    groups: ['loginOnly'],
+                    controller: application.controllers.GAAccountsCtrl
+                })
+                    .put('ga.report', {
+                    path: '/ga/accounts/:accountId/:propertyId/:profileId',
+                    name: 'Reports',
+                    template: 'ga_reports.html',
+                    groups: ['none'],
+                    controller: application.controllers.GAReportsCtrl
+                })
+            });
         }
-        Routes.LOGIN = '/login';
-        Routes.HOME = '/';
+        Routes.prototype.getRoutePath = function (route) {
+            return this.sections.get(route).path;
+        };
+        Routes.prototype.getDefaultSectionPath = function () {
+            return this.getRoutePath(this.defaultSection);
+        };
+        Routes.prototype.createMenuObject = function () {
+            var menus = [], routes = this.sections.toArray();
+            for (var i = 0; i < this.sections.getSize(); i++) {
+                var route = routes[i], routeObject = {};
+                if (!route.subsections) {
+                    routeObject.path = route.path;
+                }
+                else {
+                    routeObject.subsections = route.subsections;
+                }
+                routeObject.name = route.name;
+                routeObject.groups = route.groups;
+                menus.push(routeObject);
+            }
+            return menus;
+        };
+        Routes.prototype.setRoutes = function ($routeProvider) {
+            var sectionObjects = this.sections.toArray();
+            for (var i = 0; i < sectionObjects.length; i++) {
+                if (sectionObjects[i].subsections) {
+                    var subsections = sectionObjects[i].subsections.toArray();
+                    for (var y = 0; y < subsections.length; y++) {
+                        $routeProvider
+                            .when(subsections[y].path, {
+                            controller: subsections[y].controller,
+                            templateUrl: this.templatePath + subsections[y].template
+                        });
+                    }
+                }
+                else {
+                    $routeProvider
+                        .when(sectionObjects[i].path, {
+                        controller: sectionObjects[i].controller,
+                        templateUrl: this.templatePath + sectionObjects[i].template
+                    });
+                }
+            }
+            $routeProvider.otherwise({ redirectTo: this.sections.get(this.defaultSection).path });
+        };
+        ;
         return Routes;
     })();
     application.Routes = Routes;
-})(application || (application = {}));
-
-var application = application || {};
-(function (application) {
-    var Strings = (function () {
-        function Strings() {
-        }
-        Strings.ERROR_REQUEST_TIMEOUT = 'Promiň, trvá to nějak dlouho. Můžeš čekat dál, zkontrolovat připojení k internetu nebo to zkus později.';
-        Strings.ERROR_NOT_AUTHORIZED = 'Nepodařilo se autorizovat tvůj Google účet.\n Zpráva chyby: ';
-        Strings.ERROR_IMMEDIATE_FAILED = 'Platnost tvého přihlášení zřejmě vypršela. Přihlaš se prosím znovu.\nPokud potíže přetrvávají obrať se na technickou podporu.';
-        Strings.ERROR_PLUS_NOT_FOUND = 'Nepodařilo se stáhnout zdroje potřebné pro tvoji identifikaci.';
-        Strings.ERROR_USER_DATA = 'Nepodařilo se stáhnout uživatelská data.';
-        Strings.ERROR_TECH_PLEASE_REPEAT = 'Došlo k technickým problémům. Zkus aplikaci načíst znovu.';
-        Strings.SUCCESS_USER_LOGGED_IN = 'Nazdar %s! Přihlášení proběhlo v pohodě.';
-        Strings.SUCCESS_USER_LOGGED_IN_IMMEDIATE = 'Čus %s! Vítej zpět! Platnost tvého přihlášení byla prodloužena.';
-        Strings.SUCCESS_USER_LOGGED_OUT = 'Odhlášení proběhlo v pohodě.';
-        Strings.ERROR_ANALYTICS_NOT_FOUND = 'Nepodařilo se stáhnout knihovnu Google Analytics';
-        Strings.ERROR_ANALYTICS_NOT_RESPONSE = 'Služba Google Analytics momentálně neodpovídá.';
-        Strings.ERROR_ACCOUNT_SUMMARIES_SAVE = 'Nepodařilo s uložit informace o všech účtech.';
-        Strings.ERROR_PARCIAL_INSTANCE = 'Tato instance zatím nebyla stežena celá. Tuto metodu nelze použít.';
-        Strings.WARN_PROPERTY_COMPLETE = 'Toto webové property je již kompletně stažené.';
-        Strings.WARN_ACCOUNT_COMPLETE = '';
-        return Strings;
-    })();
-    application.Strings = Strings;
 })(application || (application = {}));
 
 ///<reference path="../../reference.ts" />
@@ -831,14 +1392,15 @@ var application = application || {};
             //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
             //##############################################################################
             //== CONSTUCTORS AND FACTORY METHODS ===========================================
-            function LoginCtrl($scope, $location, AuthService) {
+            function LoginCtrl($scope, $rootScope, $location, AuthService) {
                 this.$scope = $scope;
+                this.$rootScope = $rootScope;
                 this.$location = $location;
                 this.AuthService = AuthService;
                 this.$scope.vm = this;
                 // If user is already logged in, redirect to homepage
                 if (this.AuthService.getUserState() == 1) {
-                    this.$location.path(application.Routes.HOME);
+                    this.$location.path(this.$rootScope.routes.get('home'));
                 }
             }
             //== INSTANCE GETTERS AND SETTERS ==============================================
@@ -852,10 +1414,125 @@ var application = application || {};
                 this.AuthService.authorizeUser();
             };
             //== CLASS ATTRIBUTES ==========================================================	
-            LoginCtrl.$inject = ['$scope', '$location', 'AuthService'];
+            LoginCtrl.$inject = ['$scope', '$rootScope', '$location', 'AuthService'];
             return LoginCtrl;
         })();
         controllers.LoginCtrl = LoginCtrl;
+    })(controllers = application.controllers || (application.controllers = {}));
+})(application || (application = {}));
+
+///<reference path="../../reference.ts" />
+var application = application || {};
+(function (application) {
+    var controllers;
+    (function (controllers) {
+        /**
+         * Class HomeCtrl represents default controller for default application View.
+         *
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 01/2016
+         */
+        var GAAccountsCtrl = (function () {
+            //== INSTANCE ATTRIBUTES =======================================================
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS ===========================================
+            function GAAccountsCtrl($scope, $log, UIService, GAService) {
+                var _this = this;
+                this.$scope = $scope;
+                this.$log = $log;
+                this.UIService = UIService;
+                this.GAService = GAService;
+                this.$scope.vm = this;
+                if (!this.GAService.isDataDownloaded()) {
+                    this.$log.debug('GAAccountsCtrl: Basic data still NA. Start downloading process.');
+                    this.UIService.showLoader();
+                    this.GAService.downloadAnalyticsData()
+                        .then(function () {
+                        _this.$log.debug('GAAccountsCtrl: Basic data were downloaded.');
+                        _this.UIService.hideLoader();
+                    }, function () {
+                        _this.$log.error('GAAccountsCtrl: Basic data weren\'t downloaded.');
+                        _this.UIService.showAlert(application.Strings.ERROR_BASICDATA_NOT_LOAD);
+                        _this.UIService.hideLoader();
+                    });
+                }
+            }
+            //== CLASS ATTRIBUTES ==========================================================	
+            GAAccountsCtrl.$inject = ['$scope', '$log', 'UIService', 'GAService'];
+            return GAAccountsCtrl;
+        })();
+        controllers.GAAccountsCtrl = GAAccountsCtrl;
+    })(controllers = application.controllers || (application.controllers = {}));
+})(application || (application = {}));
+
+///<reference path="../../reference.ts" />
+var application = application || {};
+(function (application) {
+    var controllers;
+    (function (controllers) {
+        /**
+         * Class HomeCtrl represents default controller for default application View.
+         *
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 01/2016
+         */
+        var GAReportsCtrl = (function () {
+            //== INSTANCE ATTRIBUTES =======================================================
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS ===========================================
+            function GAReportsCtrl($scope, $routeParams) {
+                this.$scope = $scope;
+                this.$routeParams = $routeParams;
+                this.$scope.vm = this;
+                this.$scope.accountId = this.$routeParams.accountId;
+                this.$scope.propertyId = this.$routeParams.propertyId;
+                this.$scope.profileId = this.$routeParams.profileId;
+                this.$scope.csv;
+                this.$scope.data;
+                this.$scope.result = [];
+            }
+            //== INSTANCE GETTERS AND SETTERS ==============================================
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================
+            GAReportsCtrl.prototype.calculatePV = function () {
+                var _this = this;
+                console.log("running gapi");
+                gapi.client.analytics.data.ga.get({
+                    'ids': 'ga:' + this.$scope.profileId,
+                    'start-date': '7daysAgo',
+                    'end-date': 'today',
+                    'metrics': 'ga:sessions',
+                    'dimensions': 'ga:pagePath'
+                })
+                    .then(function (response) {
+                    console.log("Saving data");
+                    _this.$scope.data = response.result;
+                    _this.find404();
+                });
+            };
+            GAReportsCtrl.prototype.find404 = function () {
+                var csv = this.$scope.csv, data = this.$scope.data.rows;
+                console.log("Running cycles");
+                for (var i = 0; i < csv.length; i++) {
+                    for (var y = 0; y < data.length; y++) {
+                        if (csv[i]['path'].trim() === data[y][0].trim()) {
+                            this.$scope.result.push([data[y][0], data[y][1]]);
+                            break;
+                        }
+                    }
+                }
+                this.$scope.$apply();
+            };
+            //== CLASS ATTRIBUTES ==========================================================	
+            GAReportsCtrl.$inject = ['$scope', '$routeParams'];
+            return GAReportsCtrl;
+        })();
+        controllers.GAReportsCtrl = GAReportsCtrl;
     })(controllers = application.controllers || (application.controllers = {}));
 })(application || (application = {}));
 
@@ -907,12 +1584,12 @@ var application = application || {};
              */
             AuthService.prototype.authorizeUser = function (redirect) {
                 var _this = this;
-                redirect = redirect || application.Routes.HOME;
+                redirect = redirect || this.$rootScope.routes.getRoutePath('home');
                 this.UIService.showLoader();
                 this.LoginService.login()
                     .then(function () {
                     _this.$location.path(redirect);
-                    _this.UIService.showAlert(StringF.format(application.Strings.SUCCESS_USER_LOGGED_IN, _this.getUserInfo().name), services.AlertService.OK);
+                    _this.UIService.showAlert(StringF.format(application.Strings.SUCCESS_USER_LOGGED_IN, _this.getUserInfo().name), services.AlertService.OK, 30000);
                     _this.$rootScope.$apply();
                     _this.UIService.hideLoader();
                 }, function (error) {
@@ -937,20 +1614,20 @@ var application = application || {};
                         this.LoginService.login(true)
                             .then(function () {
                             _this.$log.debug('AuthService: Token refreshed.');
-                            _this.UIService.showAlert(StringF.format(application.Strings.SUCCESS_USER_LOGGED_IN_IMMEDIATE, _this.getUserInfo().name), 'success');
+                            _this.UIService.showAlert(StringF.format(application.Strings.SUCCESS_USER_LOGGED_IN_IMMEDIATE, _this.getUserInfo().name), services.AlertService.OK, 30000);
                             _this.$rootScope.$apply();
                         }, function (err) {
                             _this.$log.error('AuthService: Token could not refresh.');
-                            _this.$log.debug(err);
+                            _this.UIService.showAlert(err);
                             _this.logout();
-                            _this.$location.path(application.Routes.LOGIN);
+                            _this.$location.path(_this.$rootScope.routes.getRoutePath('login'));
                             _this.$rootScope.$apply();
                         });
                         break;
                     //Logged out user    
                     case 0:
                         this.$log.debug('AuthService: User not logged.');
-                        this.$location.path(application.Routes.LOGIN);
+                        this.$location.path(this.$rootScope.routes.getRoutePath('login'));
                         break;
                     //Logged in user
                     case 1:
@@ -964,7 +1641,7 @@ var application = application || {};
                                 _this.$log.error('AuthService: User info not refresh.');
                                 _this.$log.debug(err);
                                 _this.UIService.showAlert(application.Strings.ERROR_USER_DATA);
-                                _this.$location.path(application.Routes.LOGIN);
+                                _this.$location.path(_this.$rootScope.routes.getRoutePath('login'));
                                 _this.$rootScope.$apply();
                             });
                             // Set this apllication as stated. Due to login watches on every route change.
@@ -983,9 +1660,9 @@ var application = application || {};
              */
             AuthService.prototype.logout = function (alert) {
                 this.LoginService.logout();
-                this.$log.error('AuthService: User logged out.');
+                this.$log.debug('AuthService: User logged out.');
                 if (alert) {
-                    this.UIService.showAlert(application.Strings.SUCCESS_USER_LOGGED_OUT, 'success', 30000);
+                    this.UIService.showAlert(application.Strings.SUCCESS_USER_LOGGED_OUT, services.AlertService.OK, 30000);
                 }
             };
             /**
@@ -1049,7 +1726,8 @@ var application = application || {};
                 this.client_id = '265759548418-ibp90bhfkiham5hij8ka7nf8bvvqd6j0.apps.googleusercontent.com';
                 this.scopes = [
                     'profile',
-                    'https://www.googleapis.com/auth/plus.me'
+                    'https://www.googleapis.com/auth/plus.me',
+                    'https://www.googleapis.com/auth/analytics.readonly'
                 ];
             }
             //== INSTANCE GETTERS AND SETTERS ==============================================
@@ -1074,7 +1752,7 @@ var application = application || {};
             LoginService.prototype.logout = function () {
                 this.clearToken();
                 this.clearUser();
-                this.$location.path(application.Routes.LOGIN);
+                this.$location.path(this.$rootScope.routes.getRoutePath('login'));
             };
             /**
              * If user has saved token but its expired, this will refresh it.
@@ -1100,6 +1778,7 @@ var application = application || {};
                 else {
                     this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.');
                     this.$log.error('LoginService: Rejecting user data refresh.');
+                    this.logout();
                     d.reject();
                 }
                 return d.promise();
@@ -1177,6 +1856,7 @@ var application = application || {};
                 else {
                     this.$log.error('LoginService: Too quick! client.js isn\'t loaded yet.');
                     this.$log.error('LoginService: Rejecting authorize.');
+                    this.logout();
                     d.reject(application.Strings.ERROR_TECH_PLEASE_REPEAT);
                 }
                 this.$log.debug('LoginService: Returning authorize promise.');
@@ -1364,7 +2044,7 @@ var application = application || {};
                     this.loadingTimeoutPromise = this.$timeout(function () {
                         _this.hideLoader();
                         _this.showAlert(application.Strings.ERROR_REQUEST_TIMEOUT);
-                    }, 5000 //Timeout
+                    }, 30000 //Timeout
                     );
                     this.loaderSvc.showLoader();
                 }
@@ -1585,23 +2265,6 @@ var application = application || {};
     })(services = application.services || (application.services = {}));
 })(application || (application = {}));
 
-///<reference path="./typings/tsd.d.ts" />
-///<reference path="./typings/gapi2.d.ts" />
-///<reference path="./util/Promises/Promise.ts" />
-///<reference path="./util/StringF.ts" />
-///<reference path="./app/Routes.ts" />
-///<reference path="./app/Strings.ts" />
-///<reference path="./app/entities/User.ts" />
-///<reference path="./app/controllers/HomeCtrl.ts" />
-///<reference path="./app/controllers/LoginCtrl.ts" />
-///<reference path="./app/services/AuthService.ts" />
-///<reference path="./app/services/LoginService.ts" />
-///<reference path="./app/services/UIService.ts" />
-///<reference path="./app/services/LoaderService.ts" />
-///<reference path="./app/services/AlertService.ts" />
-///<reference path="./app/directives/loader/Loader.ts" />
-///<reference path="./app/directives/alert/Alert.ts" /> 
-
 ///<reference path="../../../reference.ts" />
 var application = application || {};
 (function (application) {
@@ -1618,28 +2281,724 @@ var application = application || {};
     })(directives = application.directives || (application.directives = {}));
 })(application || (application = {}));
 
+var application = application || {};
+(function (application) {
+    var directives;
+    (function (directives) {
+        function Alert($templateCache) {
+            return {
+                restrict: 'E',
+                template: $templateCache.get('app/directives/alert/Alert.html'),
+                scope: {
+                    type: '@',
+                    close: '=',
+                    icon: '@'
+                },
+                transclude: true
+            };
+        }
+        directives.Alert = Alert;
+    })(directives = application.directives || (application.directives = {}));
+})(application || (application = {}));
+
+///<reference path="../../../reference.ts" />
+var application = application || {};
+(function (application) {
+    var directives;
+    (function (directives) {
+        function Navigation($templateCache) {
+            return {
+                restrict: 'E',
+                template: $templateCache.get('app/directives/navigation/Navigation.html'),
+                scope: {},
+                controller: directives.NavigationCtrl
+            };
+        }
+        directives.Navigation = Navigation;
+    })(directives = application.directives || (application.directives = {}));
+})(application || (application = {}));
+
+///<reference path="../../../reference.ts" />
+var application = application || {};
+(function (application) {
+    var directives;
+    (function (directives) {
+        /**
+         * Class NavigationCtrl represents controller for navigataion panel
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 07/2015
+         */
+        var NavigationCtrl = (function () {
+            //== INSTANCE ATTRIBUTES =======================================================	
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS =========================================== 
+            function NavigationCtrl($scope, $location, $rootScope, AuthService) {
+                this.$scope = $scope;
+                this.$location = $location;
+                this.$rootScope = $rootScope;
+                this.AuthService = AuthService;
+                this.$scope.vm = this;
+                this.$scope.menus = this.$rootScope.routes.createMenuObject();
+            }
+            //== INSTANCE GETTERS AND SETTERS ==============================================
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================		
+            /**
+             * Decides if menu should be visible or not.
+             * This method is called from a view during navs iteration.
+             */
+            NavigationCtrl.prototype.showMenu = function (groups) {
+                for (var i = 0; i < groups.length; i++) {
+                    switch (groups[i]) {
+                        case 'always':
+                            if (this.AuthService.getUserState() === 0) {
+                                return false;
+                            }
+                            return true;
+                        case 'none':
+                            return false;
+                        case 'anonymous':
+                            if (this.AuthService.getUserState() === 0) {
+                                return true;
+                            }
+                            return false;
+                        //Only for logged users
+                        case 'loginOnly':
+                            if (this.AuthService.getUserState() === 1) {
+                                return true;
+                            }
+                            return false;
+                        default:
+                            throw new Error('NavigationCtrl: Unknown type of user rights:' + groups);
+                    }
+                }
+            };
+            /**
+             * Retrieve information if provided link belongs to current section.
+             * This method is called from a view as a pointer where should be placed class "active".
+             */
+            NavigationCtrl.prototype.showActiveClass = function (menu) {
+                if (menu.subsections) {
+                    var subsections = menu.subsections.toArray();
+                    for (var i = 0; i < subsections.length; i++) {
+                        if (this.$rootScope.currentSectionPath.match(subsections[i].path)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+                else {
+                    if (this.$rootScope.currentSectionPath.match(menu.path)) {
+                        if (menu.path == "/" && this.$rootScope.currentSectionPath != "/") {
+                            return false;
+                        }
+                        return true;
+                    }
+                    else
+                        return false;
+                }
+            };
+            /**
+             * Retrieve information if provided link belongs to current section.
+             * This method is called from a view as a pointer where should be placed class "active".
+             */
+            NavigationCtrl.prototype.showDropdownClass = function (menu) {
+                if (menu.subsections) {
+                    return true;
+                }
+                return false;
+            };
+            NavigationCtrl.prototype.isUserLogged = function () {
+                if (this.AuthService.getUserState() < 1) {
+                    return false;
+                }
+                return true;
+            };
+            NavigationCtrl.prototype.getUserName = function () {
+                var user = this.AuthService.getUserInfo();
+                return user.name + " " + user.lastName;
+            };
+            NavigationCtrl.prototype.getRoutePath = function (route) {
+                return this.$rootScope.routes.getRoutePath(route);
+            };
+            /**
+             * Logout User and clear app data
+             */
+            NavigationCtrl.prototype.logout = function () {
+                this.AuthService.logout(true);
+            };
+            //== CLASS ATTRIBUTES ==========================================================
+            NavigationCtrl.$inject = ['$scope', '$location', '$rootScope', 'AuthService'];
+            return NavigationCtrl;
+        })();
+        directives.NavigationCtrl = NavigationCtrl;
+    })(directives = application.directives || (application.directives = {}));
+})(application || (application = {}));
+
+///<reference path="./Strings.ts" />
+///<reference path="./typings/tsd.d.ts" />
+///<reference path="./typings/gapi2.d.ts" />
+///<reference path="./util/reference.ts" />
+///<reference path="./app/Routes.ts" />
+///<reference path="./app/entities/User.ts" />
+///<reference path="./app/controllers/HomeCtrl.ts" />
+///<reference path="./app/controllers/LoginCtrl.ts" />
+///<reference path="./app/controllers/GAAccountsCtrl.ts" />
+///<reference path="./app/controllers/GAReportsCtrl.ts" />
+///<reference path="./app/services/AuthService.ts" />
+///<reference path="./app/services/LoginService.ts" />
+///<reference path="./app/services/UIService.ts" />
+///<reference path="./app/services/LoaderService.ts" />
+///<reference path="./app/services/AlertService.ts" />
+///<reference path="./app/directives/loader/Loader.ts" />
+///<reference path="./app/directives/alert/Alert.ts" />
+///<reference path="./app/directives/navigation/Navigation.ts" />
+///<reference path="./app/directives/navigation/NavigationCtrl.ts" />
+///<reference path="./modules/GoogleAnalytics/reference.ts" /> 
+
+///<reference path='../../../reference.ts' />
+var analytics = analytics || {};
+(function (analytics) {
+    var services;
+    (function (services) {
+        /**
+         * This class represents main service, which is responsible for user actions.
+         *
+         * It can authorize or logout user, return its login state od return its info.
+         * Also shows alerts and can show loaders in specific cases.
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 02/2016
+         */
+        var GAService = (function () {
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS =========================================== 	
+            function GAService($log) {
+                this.$log = $log;
+                //== INSTANCE ATTRIBUTES =======================================================
+                this.ACCOUNTS = new util.StringMap();
+                this.dataDownloaded = false;
+            }
+            //== INSTANCE GETTERS AND SETTERS ==============================================
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================
+            GAService.prototype.downloadAnalyticsData = function (force) {
+                var _this = this;
+                var d = new Promises.Deferred();
+                this.$log.debug('GAService: Starting download GA accounts.');
+                if (this.isDataDownloaded() && !force) {
+                    this.$log.debug('GAService: Data already downloaded. - Fulfilling download GA accounts promise.');
+                    d.fulfill();
+                }
+                else {
+                    this.loadAnalytics()
+                        .then(function () { return _this.requestAccountSummaries(); })
+                        .then(function () {
+                        if (typeof _this.ACCOUNTS.toArray()[0] != 'undefined') {
+                            _this.dataDownloaded = true;
+                            _this.$log.debug('GAService: Data donwloaded. - Fulfilling download GA accounts promise.');
+                            d.fulfill();
+                        }
+                        else {
+                            _this.$log.debug('GAService: Data was donwloaded but wasn\'t saved. - Rejecting download GA accounts promise.');
+                            d.reject();
+                        }
+                    }, function () {
+                        _this.$log.debug('GAService: Data wasn\'t downloaded. - Rejecting download GA accounts promise.');
+                        d.reject();
+                    });
+                }
+                this.$log.debug('GAService: Returning download GA accounts promise.');
+                return d.promise();
+            };
+            /**********************************************************************
+             * Returns map of all accounts
+             */
+            GAService.prototype.getAllAccounts = function () {
+                if (typeof this.ACCOUNTS.toArray()[0] == 'undefined') {
+                    return null;
+                }
+                return this.ACCOUNTS;
+            };
+            /**
+             * Returns account by its number.
+             */
+            GAService.prototype.getAccount = function (accountId) {
+                return this.ACCOUNTS.get(accountId);
+            };
+            /**
+             * Delete all accounts data.
+             */
+            GAService.prototype.deleteAllAccounts = function () {
+                this.ACCOUNTS.flush();
+            };
+            GAService.prototype.isDataDownloaded = function () {
+                return this.dataDownloaded;
+            };
+            //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
+            //== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================
+            /********************************************************************
+             * Factory method for creating accounts
+             */
+            GAService.prototype.createAccount = function (account) {
+                this.ACCOUNTS.put(account.id, new analytics.entities.Account(account.id, account.name, account.webProperties, this.$log));
+            };
+            /*****************************************************************---
+             * Load Analytics Client library
+             */
+            GAService.prototype.loadAnalytics = function () {
+                var _this = this;
+                this.$log.debug('GAService: Starting Load GA library.');
+                var d = new Promises.Deferred();
+                if (gapi.client.analytics) {
+                    this.$log.error('GAService: GA library already loaded - Rejecting Load GA library promise.');
+                    d.reject();
+                }
+                else {
+                    gapi.client.load('analytics', 'v3', function () {
+                        if (gapi.client.analytics) {
+                            _this.$log.debug('GAService: Fulfiiling Load GA library promise.');
+                            d.fulfill();
+                        }
+                        else {
+                            _this.$log.error('GAService: Rejecting Load GA library promise.');
+                            d.reject(analytics.Strings.ERROR_ANALYTICS_NOT_FOUND);
+                        }
+                    });
+                }
+                this.$log.debug('GAService: Returning Load GA library Promise');
+                return d.promise();
+            };
+            /************************************************************************
+             * Request API for AccounSummaries. Basic data about Account, WebProperties and Profiles.
+             */
+            GAService.prototype.requestAccountSummaries = function () {
+                var _this = this;
+                this.$log.debug('GAService: Starting AccountSummaries API request.');
+                var d = new Promises.Deferred();
+                if (gapi.client.analytics) {
+                    gapi.client.analytics.management.accountSummaries.list()
+                        .then(function (data) {
+                        if (_this.saveAccountSummaries(data)) {
+                            _this.$log.debug('GAService: Fullfilling AccountSummaries API request promise.');
+                            d.fulfill();
+                        }
+                        else {
+                            _this.$log.error('GAService: Rejecting AccountSummaries API request promise.');
+                            d.reject(analytics.Strings.ERROR_ACCOUNT_SUMMARIES_SAVE);
+                        }
+                    }, function (error) {
+                        _this.$log.error('GAService: Rejecting AccountSummaries API request promise.');
+                        _this.$log.error(error);
+                        d.reject(analytics.Strings.ERROR_ANALYTICS_NOT_FOUND);
+                    });
+                }
+                else {
+                    this.$log.error('GAService: Rejecting AccountSummaries API request. NEVER SHOULD HAPEN!');
+                    d.reject(analytics.Strings.ERROR_ANALYTICS_NOT_RESPONSE);
+                }
+                this.$log.debug('GAService: Returning AccountSummaries API request promise.');
+                return d.promise();
+            };
+            /**
+             * Proiteruje data v parametru a vytvoří jednotlivé instance všech ÚČTŮ, PROPERTY A PROFILŮ. Parametr by mě odpovídat tomu co vrátí APi na základě metody requestAccountSUmmaries()
+             */
+            GAService.prototype.saveAccountSummaries = function (data) {
+                this.$log.debug('GAService: Starting save AccountSummaries data.');
+                var accounts = data.result.items;
+                try {
+                    for (var i = 0; i < accounts.length; i++) {
+                        this.createAccount(accounts[i]);
+                    }
+                }
+                catch (Error) {
+                    this.$log.error('GAService: AccountSummaries data wasn\'t save');
+                    this.ACCOUNTS.flush();
+                    return false;
+                }
+                this.$log.debug('GAService: AccountSummaries were successfully saved.');
+                return true;
+            };
+            //== CLASS ATTRIBUTES ==========================================================
+            //Angular DI 
+            GAService.$inject = ['$log'];
+            return GAService;
+        })();
+        services.GAService = GAService;
+    })(services = analytics.services || (analytics.services = {}));
+})(analytics || (analytics = {}));
+
+///<reference path="../../../../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var directives;
+    (function (directives) {
+        function AccountsList($templateCache) {
+            return {
+                restrict: 'E',
+                template: $templateCache.get('modules/GoogleAnalytics/directives/accountsList/AccountsList.html'),
+                scope: {},
+                controller: directives.AccountsListCtrl
+            };
+        }
+        directives.AccountsList = AccountsList;
+    })(directives = analytics.directives || (analytics.directives = {}));
+})(analytics || (analytics = {}));
+
+///<reference path="../../../../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var directives;
+    (function (directives) {
+        /**
+         * Class NavigationCtrl represents controller for navigataion panel
+         *
+         * @author  André Heller; anheller6gmail.com
+         * @version 1.00 — 07/2015
+         */
+        var AccountsListCtrl = (function () {
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS =========================================== 
+            function AccountsListCtrl($scope, $log, GAService) {
+                this.$scope = $scope;
+                this.$log = $log;
+                this.GAService = GAService;
+                //== INSTANCE ATTRIBUTES =======================================================
+                this.counter = 0;
+                this.$scope.vm = this;
+                this.checkData();
+            }
+            //== INSTANCE GETTERS AND SETTERS ==============================================
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================		
+            //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
+            //== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================
+            AccountsListCtrl.prototype.checkData = function () {
+                var _this = this;
+                this.$log.debug('AccountsListCtrl: Checking data - GA Accounts');
+                var accounts = this.GAService.getAllAccounts();
+                if (!accounts) {
+                    var timeout = (Math.pow(2, this.counter) * 1000) + Math.random();
+                    this.$log.debug('AccountsListCtrl: Accounts weren\'t loaded yet.\nSetting up timeout for ' + timeout / 1000 + 's.');
+                    if (this.counter < 6) {
+                        setTimeout(function () {
+                            return _this.checkData();
+                        }, timeout);
+                        this.counter++;
+                    }
+                }
+                else {
+                    this.$log.debug('AccountsListCtrl: Data found.');
+                    this.$scope.accounts = accounts.toArray();
+                }
+            };
+            AccountsListCtrl.prototype.showAccounts = function () {
+                if (this.$scope.accounts) {
+                    return true;
+                }
+                return false;
+            };
+            //== CLASS ATTRIBUTES ==========================================================
+            AccountsListCtrl.$inject = ['$scope', '$log', 'GAService'];
+            return AccountsListCtrl;
+        })();
+        directives.AccountsListCtrl = AccountsListCtrl;
+    })(directives = analytics.directives || (analytics.directives = {}));
+})(analytics || (analytics = {}));
+
+///<reference path="../../../../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var directives;
+    (function (directives) {
+        function CSVReader() {
+            // Function to convert to JSON
+            var convertToJSON = function (content) {
+                // Declare our variables
+                var lines = content.csv.split('\n'), headers = lines[0].split(content.separator), columnCount = lines[0].split(content.separator).length, results = [];
+                // For each row
+                for (var i = 1; i < lines.length; i++) {
+                    // Declare an object
+                    var obj = {};
+                    // Get our current line
+                    var line = lines[i].split(new RegExp(content.separator + '(?![^"]*"(?:(?:[^"]*"){2})*[^"]*$)'));
+                    // For each header
+                    for (var j = 0; j < headers.length; j++) {
+                        // Populate our object
+                        obj[headers[j].trim()] = line[j];
+                    }
+                    // Push our object to our result array
+                    results.push(obj);
+                }
+                // Return our array
+                return results;
+            };
+            return {
+                restrict: 'A',
+                scope: {
+                    results: '=',
+                    separator: '=',
+                    callback: '&saveResultsCallback'
+                },
+                link: function (scope, element, attrs) {
+                    // Create our data model
+                    var data = {
+                        csv: null,
+                        separator: scope.separator || ','
+                    };
+                    // When the file input changes
+                    element.on('change', function (e) {
+                        // Get our files
+                        var files = e.target.files;
+                        // If we have some files
+                        if (files && files.length) {
+                            // Create our fileReader and get our file
+                            var reader = new FileReader();
+                            var file = (e.srcElement || e.target).files[0];
+                            // Once the fileReader has loaded
+                            reader.onload = function (e) {
+                                // Get the contents of the reader
+                                var contents = e.target.result;
+                                debugger;
+                                // Set our contents to our data model
+                                data.csv = contents;
+                                // Apply to the scope
+                                scope.$apply(function () {
+                                    // Our data after it has been converted to JSON
+                                    scope.results = convertToJSON(data);
+                                    // Call our callback function 
+                                    scope.callback(scope.result);
+                                });
+                            };
+                            // Read our file contents
+                            reader.readAsText(file);
+                        }
+                    });
+                }
+            };
+        }
+        directives.CSVReader = CSVReader;
+    })(directives = analytics.directives || (analytics.directives = {}));
+})(analytics || (analytics = {}));
+
+// module Google Analytics
+///<reference path="./../../Strings.ts" />
+///<reference path="./../../util/reference.ts" />
+///<reference path="./entities/Interfaces.ts" />
+///<reference path="./entities/Account.ts" />
+///<reference path="./entities/WebProperty.ts" />
+///<reference path="./entities/Profile.ts" />
+///<reference path="./services/GaService.ts" />
+///<reference path="./directives/accountsList/AccountsList.ts" />
+///<reference path="./directives/accountsList/AccountsListCtrl.ts" />
+///<reference path="./directives/csvReader/CSVReader.ts" /> 
+
+///<reference path="../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var entities;
+    (function (entities) {
+        /**
+         * Instances of class Account represent Google Analytics accounts.
+         * Each account has several properties (class:WebProperty) and
+         * settings (methods) like creating properties, filters, etc.
+         *
+         * @author  André Heller; anheller6@gmail.com
+         * @version 1.00 — 07/2015
+         */
+        var Account = (function () {
+            //== CLASS GETTERS AND SETTERS =================================================
+            //== OTHER NON-PRIVATE CLASS METHODS =========================================== 
+            //##############################################################################
+            //== CONSTUCTORS AND FACTORY METHODS =========================================== 
+            /**
+             * Creates a new Account. Constructor should never be called directly.
+             * Use factory method in AccountManager class instead.
+             *
+             */
+            function Account(_id, _name, webProperties, $log) {
+                this._id = _id;
+                this._name = _name;
+                this.$log = $log;
+                //== CLASS ATTRIBUTES ==========================================================
+                //== INSTANCE ATTRIBUTES =======================================================
+                //If account instance was filly filled or its still parcial 
+                this._parciality = true;
+                //Storage for properties
+                this._properties = new util.StringMap();
+                for (var i = 0; i < webProperties.length; i++) {
+                    this.createProperty(webProperties[i]);
+                }
+            }
+            Object.defineProperty(Account.prototype, "name", {
+                //== INSTANCE GETTERS AND SETTERS ==============================================
+                get: function () {
+                    return this._name;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Account.prototype, "id", {
+                get: function () {
+                    return this._id;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Account.prototype, "properties", {
+                get: function () {
+                    return this._properties;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Account.prototype, "created", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._created;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Account.prototype, "updated", {
+                get: function () {
+                    if (this.parciality) {
+                        throw new Error(analytics.Strings.ERROR_PARCIAL_INSTANCE);
+                    }
+                    return this._updated;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            Object.defineProperty(Account.prototype, "parciality", {
+                get: function () {
+                    return this._parciality;
+                },
+                set: function (value) {
+                    this._parciality = value;
+                },
+                enumerable: true,
+                configurable: true
+            });
+            //== OTHER NON-PRIVATE INSTANCE METHODS ========================================		
+            /**
+             * Complete instance attributes and meka request for all properties
+             */
+            Account.prototype.completeAccountInfo = function (account) {
+                this.created = account.created;
+                this.updated = account.updated;
+            };
+            /**
+             * Load the rest of instance if its parciality equals true or if optional param force equals true.
+             */
+            Account.prototype.completeProperties = function (force) {
+                var _this = this;
+                var d = new Promises.Deferred();
+                this.$log.debug("ACCOUNT: Starting complete properties.\n- Force: " + force + "\n- Parciality: " + this.parciality);
+                if (force || this.parciality) {
+                    this.$log.debug("ACCOUNT: Account is parcial.");
+                    this.downloadProperties().then(function (response) {
+                        _this.$log.debug("ACCOUNT: Starting save properties info.");
+                        var counter = { value: 0 }, profilesCount = response.result.totalResults;
+                        for (var i = 0; i < profilesCount; i++) {
+                            var property = _this.properties.get(response.result.items[i].id);
+                            _this.$log.debug("ACCOUNT: Saving property info: " + i);
+                            property.completePropertyInfo(response.result.items[i]);
+                            _this.$log.debug("ACCOUNT: Requesting property's profiles");
+                            property.completeProfiles().then(function () {
+                                counter.value++;
+                                _this.$log.debug("ACCOUNT: Property " + counter.value + " of " + profilesCount + " completed.");
+                                property.parciality = false;
+                            }, function (err) {
+                                _this.$log.error(err);
+                                d.reject(err);
+                                counter.value = 9999;
+                            });
+                        }
+                        _this.$log.debug("ACCOUNT: Here should start synchronize phase.");
+                        var interval = setInterval(function (counter) {
+                            if (counter.value < profilesCount) {
+                                _this.$log.debug("ACCOUNT: Waiting for completing profiles. " + counter.value + " profiles already completed. Remain: " + (profilesCount - counter.value));
+                            }
+                            else {
+                                _this.$log.debug("ACCOUNT: Fulfill complete properties promise.");
+                                _this.parciality = false;
+                                clearInterval(interval);
+                                d.fulfill();
+                            }
+                        }, 500, counter);
+                    }, function (err) {
+                        _this.$log.error(err);
+                        d.reject(err);
+                    });
+                }
+                else {
+                    this.$log.error('ACCOUNT: This account is alredy completed.');
+                    //Aready completed								
+                    d.reject(analytics.Strings.WARN_ACCOUNT_COMPLETE);
+                }
+                this.$log.debug("ACCOUNT: Return complete properties promise.");
+                return d.promise();
+            };
+            //== PRIVATE AND AUXILIARY CLASS METHODS =======================================
+            //== PRIVATE AND AUXILIARY INSTANCE METHODS ====================================
+            /**
+             * Creates a new property and put it into properties stringMap.
+             */
+            Account.prototype.createProperty = function (property) {
+                this.properties.put(property.id, new entities.WebProperty(property.id, property.name, property.internalWebPropertyId, property.level, this.id, property.profiles, this.$log));
+            };
+            /**
+             * Make an API call for list all properties
+             */
+            Account.prototype.downloadProperties = function () {
+                var _this = this;
+                var d = new Promises.Deferred();
+                this.$log.debug("ACCOUNT: Contact API for property list.");
+                gapi.client.analytics.management.webproperties.list({ 'accountId': this.id }).then(function (response) {
+                    _this.$log.debug("ACCOUNT: Fullfill property list promise.");
+                    d.fulfill(response);
+                }, function (response) {
+                    _this.$log.error("ACCOUNT: Reject property list promise.");
+                    d.reject(response);
+                });
+                this.$log.debug("ACCOUNT: Return property list promise.");
+                return d.promise();
+            };
+            return Account;
+        })();
+        entities.Account = Account;
+    })(entities = analytics.entities || (analytics.entities = {}));
+})(analytics || (analytics = {}));
+
 ///<reference path="./reference.ts" />
 var application = application || {};
 (function (application) {
-    var app = angular.module('Application', ['ngRoute', 'templates']);
+    var app = angular.module('Application', ['ngRoute', 'templates', 'GoogleAnalytics']), routes = new application.Routes();
     /**
-     * App configuration.
-     *
-     * Route settings.
-     */
+    * App configuration.
+    *
+    * Route settings.
+    */
     app.config(function ($routeProvider, $logProvider) {
         //Turn on debug output
         $logProvider.debugEnabled(true);
-        setRoutes($routeProvider);
+        routes.setRoutes($routeProvider);
     })
-        .run(['$rootScope', '$log', 'AuthService', function ($rootScope, $log, AuthService) {
+        .run(['$rootScope', '$log', '$location', 'AuthService', 'UIService', function ($rootScope, $log, $location, AuthService, UIService) {
             //Set default initial data
             setInitialData($rootScope, AuthService);
             //Register listener to watch route changes
             $rootScope.$on('$routeChangeStart', function (event, next, current) {
                 if (next.$$route) {
                     //Set current section
-                    $rootScope.currentSection = next.$$route.originalPath;
+                    $rootScope.currentSectionPath = $location.url();
                     //Authorize user on background or redirect to login page
                     AuthService.authorizeUserAutomatically();
                     $log.debug('=======================================\n' +
@@ -1649,37 +3008,24 @@ var application = application || {};
                 else {
                     //TODO 404
                     $log.debug('APP: 404');
+                    UIService.showAlert(application.Strings.ERROR_404);
                 }
             });
         }]);
     /**
-     * Directive & services & controllers
-     */
+    * Directive & services & controllers
+    */
     app.service('AuthService', application.services.AuthService)
         .service('LoginService', application.services.LoginService)
         .service('UIService', application.services.UIService)
         .service('LoaderService', application.services.LoaderService)
         .service('AlertService', application.services.AlertService);
     app.directive('loader', application.directives.Loader)
-        .directive('alert', application.directives.Alert);
+        .directive('alert', application.directives.Alert)
+        .directive('navigation', application.directives.Navigation);
     /**
-     * Set All routes settings
-     */
-    var setRoutes = function ($routeProvider) {
-        $routeProvider
-            .when(application.Routes.LOGIN, {
-            controller: application.controllers.LoginCtrl,
-            templateUrl: 'app/templates/login.html'
-        })
-            .when(application.Routes.HOME, {
-            controller: application.controllers.HomeCtrl,
-            templateUrl: 'app/templates/home.html'
-        })
-            .otherwise({ redirectTo: '/' });
-    };
-    /**
-     * Set basic initial data for application
-     */
+    * Set basic initial data for application
+    */
     var setInitialData = function ($rootScope, AuthService) {
         // Initiate system variables
         AuthService.initUser();
@@ -1687,8 +3033,39 @@ var application = application || {};
         $rootScope.sessionStarted = false;
         // Sets the enviromanet (debug, production)
         $rootScope.enviroment = 'debug';
+        // Set default dection
+        $rootScope.currentSectionPath = routes.getDefaultSectionPath();
+        // Set reference to Routes class instace
+        $rootScope.routes = routes;
     };
 })(application || (application = {}));
+var runApp = function () {
+    angular.bootstrap(document, ['Application']);
+};
+
+///<reference path="./../../reference.ts" />
+var analytics = analytics || {};
+(function (analytics) {
+    var app = angular.module('GoogleAnalytics', ['templates']);
+    /**
+     * App configuration.
+     *
+     * Route settings.
+     */
+    app.config(function ($logProvider) {
+        //Turn on debug output
+        $logProvider.debugEnabled(true);
+    })
+        .run(['$log', function ($log) {
+            $log.debug('GA: Module loaded ');
+        }]);
+    /**
+     * Directive & services & controllers
+     */
+    app.service('GAService', analytics.services.GAService);
+    app.directive('accountsList', analytics.directives.AccountsList)
+        .directive('csvReader', analytics.directives.CSVReader);
+})(analytics || (analytics = {}));
 
 /*
     Promises, Promises...

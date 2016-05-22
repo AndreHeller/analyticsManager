@@ -19,7 +19,7 @@
 				</div>
 				<ul class="list-group collapse" id="property-{{property.id}}">
 					<li class="list-group-item" ng-repeat="profile in property.profiles.toArray()">
-						<a ng-href="/#/accounts/{{account.id}}/properties/{{property.id}}/profiles/{{profile.id}}/">{{profile.name}}</a>
+						<a ng-href="./#/ga/accounts/{{account.id}}/{{property.id}}/{{profile.id}}">{{profile.name}}</a>
 					</li>
 				</ul>
 			</li>

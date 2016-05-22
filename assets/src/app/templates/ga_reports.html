@@ -1,0 +1,36 @@
+<h1>Reports</h1>
+
+<div class="form-group" ng-hide="csv">
+    <h3>Import CSV file</h3>
+    <input type="file" csv-reader results="csv" />
+</div>
+
+<div class="block right" ng-if="csv.length && !result.length">
+    <h2>CSV file content</h2>
+
+    <div class="form-group">
+        <button class="btn btn-primary" ng-click="vm.calculatePV()">Calculate pageviews</button>
+    </div>
+
+    <div class="content">
+        <table class="table">
+            <tr ng-repeat="url in csv">
+                <td>{{url.path}}</td>
+            </tr>
+        </table>    
+    </div>
+</div>
+
+<div class="block right" ng-if="result.length">
+    <h2>404 pageviews</h2>
+
+
+    <div class="content">
+        <table class="table">
+            <tr ng-repeat="pagePath in result">
+                <td>{{pagePath[0]}}</td>
+                <td>{{pagePath[1]}}</td>
+            </tr>
+        </table>
+    </div>
+</div>

@@ -47,6 +47,9 @@ module application.directives {
                         }
                         return true;
                     
+                    case 'none':
+                        return false;
+                    
                     case 'anonymous':
                         if(this.AuthService.getUserState() === 0){
                             return true;

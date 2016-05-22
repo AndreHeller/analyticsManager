@@ -1,16 +1,16 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-fluid">
 		<div class="navbar-header">
-			<a class="navbar-brand" ng-href="/#/">Analytics Manager</a>
+			<a class="navbar-brand" ng-href="./#/">Analytics Manager</a>
 		</div>
 		<div>
 			<ul class="nav navbar-nav" >
 				<li ng-if="vm.showMenu(menu.groups)" ng-class="{'active': vm.showActiveClass(menu), 'dropdown': vm.showDropdownClass(menu)}" ng-repeat="menu in menus">
-                    <a ng-href="/#{{menu.path}}" ng-if="!vm.showDropdownClass(menu)">{{menu.name}}</a>
+                    <a ng-href="./#{{menu.path}}" ng-if="!vm.showDropdownClass(menu)">{{menu.name}}</a>
                     <!-- Direct link above /// dropdown menu below -->
                     <a href="" ng-if="vm.showDropdownClass(menu)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{menu.name}}</a>
                     <ul ng-if="vm.showDropdownClass(menu)" class="dropdown-menu">
-                        <li ng-repeat="subsection in menu.subsections.toArray()"><a ng-href="/#{{subsection.path}}">{{subsection.name}}</a></li>
+                        <li ng-if="vm.showMenu(subsection.groups)" ng-repeat="subsection in menu.subsections.toArray()"><a ng-href="./#{{subsection.path}}">{{subsection.name}}</a></li>
                     </ul>
                 </li>
 			</ul>
@@ -24,7 +24,7 @@
 					<span class="caret"></span>
 				</a>
 				<ul class="dropdown-menu">
-					<li><a ng-href="/#/">Zobrazit profil</a></li>
+					<li><a ng-href="./#/">Zobrazit profil</a></li>
 					<li role="separator" class="divider"></li>
 					<li><a ng-click="vm.logout()"><span class="glyphicon glyphicon-log-out"></span> Odhlásit</a></li>
 				</ul>

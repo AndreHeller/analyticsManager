@@ -13,3 +13,4 @@
 
 ///<reference path="./directives/accountsList/AccountsList.ts" />
 ///<reference path="./directives/accountsList/AccountsListCtrl.ts" />
+///<reference path="./directives/csvReader/CSVReader.ts" />

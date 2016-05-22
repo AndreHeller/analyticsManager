@@ -26,6 +26,7 @@ module analytics {
      */
     app.service('GAService', services.GAService);
     
-    app.directive('accountsList', directives.AccountsList);
+    app.directive('accountsList', directives.AccountsList)
+       .directive('csvReader', directives.CSVReader);
    
 }
