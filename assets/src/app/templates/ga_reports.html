@@ -9,6 +9,31 @@
     <h2>CSV file content</h2>
 
     <div class="form-group">
+        <label for="startDate">Start date:</label>
+        <input type="text" class="form-control" id="startDate" ng-model="vm.startDate">
+    </div>
+    <div class="form-group">
+        <label for="endDate">End date:</label>
+        <input type="text" class="form-control" id="endDate" ng-model="vm.endDate">
+    </div>
+    <div class="form-group">
+        <label for="metrics">Metrics:</label>
+        <input type="text" class="form-control" id="metrics" ng-model="vm.metrics">
+    </div>
+    <div class="form-group">
+        <label for="dimensions">Dimensions:</label>
+        <input type="text" class="form-control" id="dimensions" ng-model="vm.dimensions">
+    </div>
+    <div class="form-group">
+        <label for="startIndex">Start Index:</label>
+        <input type="text" class="form-control" id="startIndex" ng-model="vm.startIndex">
+    </div>
+    <div class="form-group">
+        <label for="maxResults">Max Results:</label>
+        <input type="text" class="form-control" id="maxResults" ng-model="vm.maxResults">
+    </div>
+
+    <div class="form-group">
         <button class="btn btn-primary" ng-click="vm.calculatePV()">Calculate pageviews</button>
     </div>
 
@@ -23,6 +48,7 @@
 
 <div class="block right" ng-if="result.length">
     <h2>404 pageviews</h2>
+    <p>Sampled: {{data.containsSampledData}} | Items: {{data.itemsPerPage}} | Total: {{data.totalResults}}</p>
 
 
     <div class="content">

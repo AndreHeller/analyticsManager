@@ -66,7 +66,7 @@ module analytics.directives {
 
                             // Get the contents of the reader
                             var contents = e.target.result;
-debugger;
+
                             // Set our contents to our data model
                             data.csv = contents;
 
